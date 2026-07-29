@@ -1,0 +1,45 @@
+name: Bootstrap MineReady release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.bootstrap/READY'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unpack-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Reconstruct repository payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .bootstrap/READY
+          cat .bootstrap/part-* > /tmp/mineready-repo.b64
+          base64 --decode /tmp/mineready-repo.b64 > /tmp/mineready-repo.zip
+          rm -rf /tmp/mineready-release
+          mkdir -p /tmp/mineready-release
+          unzip -q /tmp/mineready-repo.zip -d /tmp/mineready-release
+          rm -rf .bootstrap
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github -exec rm -rf {} +
+          find .github -mindepth 1 -maxdepth 1 ! -name workflows -exec rm -rf {} + 2>/dev/null || true
+          find .github/workflows -mindepth 1 -maxdepth 1 -exec rm -f {} + 2>/dev/null || true
+          cp -a /tmp/mineready-release/. .
+      - name: Validate release
+        run: node scripts/verify-static.mjs
+      - name: Commit URL-ready release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'release: deploy URL-ready MineReady v9.0.0'
+          git push origin main
