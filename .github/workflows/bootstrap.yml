@@ -23,10 +23,11 @@ jobs:
           set -euo pipefail
           test -f .bootstrap/READY
           cat .bootstrap/part-* > /tmp/mineready-repo.b64
-          base64 --decode /tmp/mineready-repo.b64 > /tmp/mineready-repo.zip
+          base64 --decode /tmp/mineready-repo.b64 > /tmp/mineready-repo.tar.xz
+          echo "8dff6af0da8cba13a1db591b282d623532491d6609338c6e574f5f8c9dbc69f4  /tmp/mineready-repo.tar.xz" | sha256sum -c -
           rm -rf /tmp/mineready-release
           mkdir -p /tmp/mineready-release
-          unzip -q /tmp/mineready-repo.zip -d /tmp/mineready-release
+          tar -xJf /tmp/mineready-repo.tar.xz -C /tmp/mineready-release
           rm -rf .bootstrap
           find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github -exec rm -rf {} +
           find .github -mindepth 1 -maxdepth 1 ! -name workflows -exec rm -rf {} + 2>/dev/null || true
