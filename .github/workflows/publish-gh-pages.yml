@@ -1,0 +1,47 @@
+name: Publish MineReady to gh-pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mineready-gh-pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate static application
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f index.html
+          test -f app.js
+          test -f data.js
+          test -f views.js
+          test -f styles.css
+          test -f manifest.webmanifest
+          test -f service-worker.js
+          test -f CNAME
+          test "$(cat CNAME)" = "mineready.zerodaycyber.io"
+          node --check app.js
+          node --check data.js
+          node --check views.js
+          node --check service-worker.js
+
+      - name: Publish exact main commit to gh-pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          git push origin HEAD:refs/heads/gh-pages --force
