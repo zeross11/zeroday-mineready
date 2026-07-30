@@ -1,1 +1,1 @@
-{"app":"Zeroday MineReady","status":"ok","version":"9.3.3","deployment":"github-pages-live","startup_recovery":"enabled"}
+{"app":"Zeroday MineReady","status":"ok","version":"9.3.4","deployment":"github-pages-live","mobile_bootstrap":"inline","service_worker":"disabled"}
