@@ -1,15 +1,19 @@
 name: Deploy MineReady to GitHub Pages
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
+
 concurrency:
   group: pages
   cancel-in-progress: true
+
 jobs:
   deploy:
     environment:
@@ -17,11 +21,60 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - name: Check out application
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure GitHub Pages
+        id: configure
+        continue-on-error: true
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        id: upload
+        if: steps.configure.outcome == 'success'
+        continue-on-error: true
+        uses: actions/upload-pages-artifact@v3
         with:
           path: .
-      - name: Deploy
+
+      - name: Deploy to GitHub Pages
         id: deployment
+        if: steps.configure.outcome == 'success' && steps.upload.outcome == 'success'
+        continue-on-error: true
         uses: actions/deploy-pages@v4
+
+      - name: Record deployment result
+        if: always()
+        env:
+          CONFIGURE_RESULT: ${{ steps.configure.outcome }}
+          UPLOAD_RESULT: ${{ steps.upload.outcome }}
+          DEPLOY_RESULT: ${{ steps.deployment.outcome }}
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > PAGES_DEPLOYMENT_STATUS.md <<EOF
+          # GitHub Pages deployment status
+
+          - Commit: \`${GITHUB_SHA}\`
+          - Configure Pages: \`${CONFIGURE_RESULT:-not-run}\`
+          - Upload artifact: \`${UPLOAD_RESULT:-not-run}\`
+          - Deploy Pages: \`${DEPLOY_RESULT:-not-run}\`
+          - Page URL: ${PAGE_URL:-not-returned}
+          - Workflow run: ${RUN_URL}
+          - Recorded UTC: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add PAGES_DEPLOYMENT_STATUS.md
+          if ! git diff --cached --quiet; then
+            git commit -m 'chore: record GitHub Pages deployment status [skip ci]'
+            git push origin HEAD:main
+          fi
+
+      - name: Fail when deployment did not complete
+        if: steps.deployment.outcome != 'success'
+        run: exit 1
