@@ -6,77 +6,85 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
 concurrency:
-  group: pages
+  group: github-pages
   cancel-in-progress: true
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate required site files
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            index.html
+            404.html
+            styles.css
+            data.js
+            views.js
+            app.js
+            manifest.webmanifest
+            service-worker.js
+            health.json
+            CNAME
+            .nojekyll
+            assets/icon.svg
+          )
+          for file in "${required[@]}"; do
+            test -e "$file" || { echo "Missing required file: $file" >&2; exit 1; }
+          done
+          test -s index.html
+          test -s styles.css
+          test -s data.js
+          test -s views.js
+          test -s app.js
+          test "$(tr -d '\r\n' < CNAME)" = "mineready.zerodaycyber.io"
+          grep -q 'styles.css' index.html
+          grep -q 'data.js' index.html
+          grep -q 'views.js' index.html
+          grep -q 'app.js' index.html
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check data.js
+          node --check views.js
+          node --check app.js
+          node --check service-worker.js
+
+      - name: Build clean Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/assets
+          cp index.html 404.html styles.css data.js views.js app.js _site/
+          cp manifest.webmanifest service-worker.js health.json CNAME .nojekyll _site/
+          cp -a assets/. _site/assets/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
   deploy:
+    needs: validate
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out application
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Configure or enable GitHub Pages
-        id: configure
-        continue-on-error: true
+      - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Upload Pages artifact
-        id: upload
-        if: steps.configure.outcome == 'success'
-        continue-on-error: true
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
-        if: steps.configure.outcome == 'success' && steps.upload.outcome == 'success'
-        continue-on-error: true
         uses: actions/deploy-pages@v4
-
-      - name: Record deployment result
-        if: always()
-        env:
-          CONFIGURE_RESULT: ${{ steps.configure.outcome }}
-          UPLOAD_RESULT: ${{ steps.upload.outcome }}
-          DEPLOY_RESULT: ${{ steps.deployment.outcome }}
-          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
-          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > PAGES_DEPLOYMENT_STATUS.md <<EOF
-          # GitHub Pages deployment status
-
-          - Commit: \`${GITHUB_SHA}\`
-          - Configure Pages: \`${CONFIGURE_RESULT:-not-run}\`
-          - Upload artifact: \`${UPLOAD_RESULT:-not-run}\`
-          - Deploy Pages: \`${DEPLOY_RESULT:-not-run}\`
-          - Page URL: ${PAGE_URL:-not-returned}
-          - Workflow run: ${RUN_URL}
-          - Recorded UTC: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          EOF
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add PAGES_DEPLOYMENT_STATUS.md
-          if ! git diff --cached --quiet; then
-            git commit -m 'chore: record GitHub Pages deployment status [skip ci]'
-            git push origin HEAD:main
-          fi
-
-      - name: Fail when deployment did not complete
-        if: steps.deployment.outcome != 'success'
-        run: exit 1
