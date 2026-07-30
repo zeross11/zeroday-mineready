@@ -1,8 +1,0 @@
-{
-  "release": "9.3.3",
-  "syntax": "success",
-  "browser_install": "success",
-  "browser_render": "success",
-  "run": "https://github.com/zeross11/zeroday-mineready/actions/runs/30561873288",
-  "commit": "5b8bf455449db5cbebe9f81c6afac4cf63f37322"
-}
