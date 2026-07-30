@@ -28,8 +28,9 @@ jobs:
         run: |
           set -uo pipefail
           DIAG="$GITHUB_WORKSPACE/BOOTSTRAP_DIAGNOSTICS.txt"
-          ARCHIVE=/tmp/mineready-repo.tar.xz
+          RAW=/tmp/mineready-repo.raw.b64
           B64=/tmp/mineready-repo.b64
+          ARCHIVE=/tmp/mineready-repo.tar.xz
           EXTRACT=/tmp/mineready-release
 
           {
@@ -54,38 +55,49 @@ jobs:
             exit 21
           fi
 
-          cat "${PARTS[@]}" > "$B64"
-          echo "Combined base64 bytes: $(wc -c < "$B64")" >> "$DIAG"
+          cat "${PARTS[@]}" > "$RAW"
+          tr -d '\r\n\t ' < "$RAW" | tr -cd 'A-Za-z0-9+/=' > "$B64"
+          echo "Combined raw bytes: $(wc -c < "$RAW")" >> "$DIAG"
+          echo "Normalized base64 bytes before padding: $(wc -c < "$B64")" >> "$DIAG"
 
-          if ! base64 --decode "$B64" > "$ARCHIVE" 2>> "$DIAG"; then
-            echo "ERROR: base64 decoding failed" >> "$DIAG"
+          remainder=$(( $(wc -c < "$B64") % 4 ))
+          if [ "$remainder" -eq 2 ]; then printf '==' >> "$B64"; fi
+          if [ "$remainder" -eq 3 ]; then printf '=' >> "$B64"; fi
+          if [ "$remainder" -eq 1 ]; then
+            echo "ERROR: normalized base64 has impossible length modulo 4" >> "$DIAG"
             exit 22
+          fi
+          echo "Normalized base64 bytes after padding: $(wc -c < "$B64")" >> "$DIAG"
+
+          if ! base64 --decode --ignore-garbage "$B64" > "$ARCHIVE" 2>> "$DIAG"; then
+            echo "ERROR: base64 decoding failed" >> "$DIAG"
+            exit 23
           fi
 
           echo "Archive bytes: $(wc -c < "$ARCHIVE")" >> "$DIAG"
           echo "Archive SHA256: $(sha256sum "$ARCHIVE" | awk '{print $1}')" >> "$DIAG"
 
           if ! xz -t "$ARCHIVE" 2>> "$DIAG"; then
-            echo "ERROR: XZ integrity test failed" >> "$DIAG"
-            exit 23
+            echo "ERROR: XZ integrity test failed; staged payload is incomplete or mixed" >> "$DIAG"
+            exit 24
           fi
 
           if ! tar -tJf "$ARCHIVE" >> "$DIAG" 2>&1; then
             echo "ERROR: TAR listing failed" >> "$DIAG"
-            exit 24
+            exit 25
           fi
 
           rm -rf "$EXTRACT"
           mkdir -p "$EXTRACT"
           if ! tar -xJf "$ARCHIVE" -C "$EXTRACT" 2>> "$DIAG"; then
             echo "ERROR: archive extraction failed" >> "$DIAG"
-            exit 25
+            exit 26
           fi
 
           for required in index.html app.js styles.css assets-data.js service-worker.js manifest.webmanifest .github/workflows/deploy-pages.yml; do
             if [ ! -f "$EXTRACT/$required" ]; then
               echo "ERROR: required release file missing: $required" >> "$DIAG"
-              exit 26
+              exit 27
             fi
           done
 
