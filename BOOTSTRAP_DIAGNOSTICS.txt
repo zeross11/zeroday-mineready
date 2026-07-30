@@ -1,0 +1,19 @@
+MineReady bootstrap diagnostics
+Run: 30502379717
+Commit: ccd6f1a908edcbc6e8794e6fd16dfa96fa77b580
+UTC: 2026-07-30T00:20:42Z
+
+Staged files:
+READY 48 bytes
+part-000 16000 bytes
+part-001 16000 bytes
+part-002 16000 bytes
+part-003 16000 bytes
+part-004 16000 bytes
+part-005 16000 bytes
+part-006 54625 bytes
+part-007 48565 bytes
+Part count: 8
+Combined base64 bytes: 199190
+base64: invalid input
+ERROR: base64 decoding failed
