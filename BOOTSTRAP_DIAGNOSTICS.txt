@@ -1,7 +1,7 @@
 MineReady bootstrap diagnostics
-Run: 30502379717
-Commit: ccd6f1a908edcbc6e8794e6fd16dfa96fa77b580
-UTC: 2026-07-30T00:20:42Z
+Run: 30502444990
+Commit: aa8bd7afac6818c644727c0379ad5762ee2bf6c2
+UTC: 2026-07-30T00:21:59Z
 
 Staged files:
 READY 48 bytes
@@ -14,6 +14,10 @@ part-005 16000 bytes
 part-006 54625 bytes
 part-007 48565 bytes
 Part count: 8
-Combined base64 bytes: 199190
-base64: invalid input
-ERROR: base64 decoding failed
+Combined raw bytes: 199190
+Normalized base64 bytes before padding: 199190
+Normalized base64 bytes after padding: 199192
+Archive bytes: 149392
+Archive SHA256: 97c330ee54004663cead5db8f36649fcca123062583535cfb51d2d05296c8586
+xz: /tmp/mineready-repo.tar.xz: Compressed data is corrupt
+ERROR: XZ integrity test failed; staged payload is incomplete or mixed
