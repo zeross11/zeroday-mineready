@@ -4,7 +4,7 @@ Mobile-first English/Spanish contractor readiness, training, mine approval, and 
 
 **Live demo:** `https://mineready.zerodaycyber.io`
 
-## Release 9.3.1
+## Release 9.3.2
 
 - Mine, employer, and worker workspaces
 - Assignment-specific mine approval
@@ -15,5 +15,6 @@ Mobile-first English/Spanish contractor readiness, training, mine approval, and 
 - Mobile, iPad, and desktop layouts
 - Installable/offline-capable PWA
 - Cache invalidation for reliable updates
+- Safe root fallback for unknown URLs
 
 This public demonstration uses fictional data stored locally in each browser. It is not an authoritative production system, regulated training curriculum, or live access-control system.
