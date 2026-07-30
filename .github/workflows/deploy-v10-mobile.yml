@@ -1,0 +1,96 @@
+name: Deploy MineReady v10.1 mobile recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.repair-v101/READY'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mineready-v101-recovery
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct and validate single-file app
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f .repair-v101/READY
+          for n in 1 2 3 4; do test -s ".repair-v101/part-${n}"; done
+          cat .repair-v101/part-1 .repair-v101/part-2 .repair-v101/part-3 .repair-v101/part-4 > /tmp/index.html
+          grep -q 'data-app-version="10.1.0"' /tmp/index.html
+          grep -q 'Mobile-first contractor readiness' /tmp/index.html
+          grep -q 'Capacitación' /tmp/index.html
+          grep -q 'Review & certify' /tmp/index.html
+          ! grep -q '<script src=' /tmp/index.html
+          ! grep -q 'rel="stylesheet"' /tmp/index.html
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('/tmp/index.html').read_text()
+          scripts=re.findall(r'<script>([\s\S]*?)</script>',html)
+          assert len(scripts)==1, len(scripts)
+          Path('/tmp/app-inline.js').write_text(scripts[0])
+          PY
+          node --check /tmp/app-inline.js
+
+      - name: Build clean GitHub Pages release
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/release
+          mkdir -p /tmp/release
+          cp /tmp/index.html /tmp/release/index.html
+          cat > /tmp/release/health.json <<'JSON'
+          {
+            "app": "Zeroday MineReady",
+            "status": "ok",
+            "version": "10.1.0",
+            "deployment": "github-pages-live",
+            "architecture": "single-file-mobile",
+            "service_worker": "disabled"
+          }
+          JSON
+          printf '%s\n' 'mineready.zerodaycyber.io' > /tmp/release/CNAME
+          : > /tmp/release/.nojekyll
+          cat > /tmp/release/robots.txt <<'TXT'
+          User-agent: *
+          Disallow: /
+          TXT
+          cat > /tmp/release/404.html <<'HTML'
+          <!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url=/"><title>Opening MineReady</title><p><a href="/">Open MineReady</a></p>
+          HTML
+          cat > /tmp/release/README.md <<'MD'
+          # Zeroday MineReady
+
+          Mobile-first English/Spanish contractor-readiness, training, mine-approval, and gate-verification demonstration.
+
+          **Live demo:** https://mineready.zerodaycyber.io
+
+          Release 10.1.0 uses one self-contained HTML file, no service worker, no external scripts, and fictional browser-local data. It is a demonstration, not a production system of record or regulated training curriculum.
+          MD
+
+      - name: Replace repository and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a /tmp/release/. .
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'release: deploy MineReady v10.1 single-file mobile recovery'
+          git push --force origin HEAD:main
+          git push --force origin HEAD:gh-pages
