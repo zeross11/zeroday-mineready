@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-app-version="9.3.2">
+<html lang="en" data-app-version="9.3.3">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -10,18 +10,26 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests">
   <meta name="description" content="MineReady contractor readiness, bilingual training, and gate verification demonstration">
   <title>Zeroday MineReady</title>
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./hardening.css">
+  <link rel="manifest" href="./manifest.webmanifest?v=9.3.3">
+  <link rel="icon" href="./assets/icon.svg?v=9.3.3" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css?v=9.3.3">
+  <link rel="stylesheet" href="./hardening.css?v=9.3.3">
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <main class="boot-screen" role="status" aria-live="polite">
+      <div class="boot-mark">09</div>
+      <h1>Zeroday MineReady</h1>
+      <p>Loading the mine-safety workspace…</p>
+      <noscript><p>JavaScript is required to run this demonstration.</p></noscript>
+    </main>
+  </div>
   <div id="modal" class="modal" hidden><div class="modal-card"><button class="close" data-action="close" aria-label="Close">×</button><div id="modalBody"></div></div></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="./data.js"></script>
-  <script src="./views.js"></script>
-  <script src="./app.js"></script>
-  <script src="./hardening.js"></script>
+  <script src="./bootstrap.js?v=9.3.3"></script>
+  <script src="./data.js?v=9.3.3"></script>
+  <script src="./views.js?v=9.3.3"></script>
+  <script src="./app.js?v=9.3.3"></script>
+  <script src="./hardening.js?v=9.3.3"></script>
 </body>
 </html>
