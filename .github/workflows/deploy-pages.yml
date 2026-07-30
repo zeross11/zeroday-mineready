@@ -26,10 +26,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configure GitHub Pages
+      - name: Configure or enable GitHub Pages
         id: configure
         continue-on-error: true
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload Pages artifact
         id: upload
