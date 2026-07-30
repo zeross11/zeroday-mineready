@@ -1,1 +1,21 @@
-{"name":"Zeroday MineReady","short_name":"MineReady","description":"Mobile contractor readiness, training, and gate verification demo","start_url":"./","scope":"./","display":"standalone","background_color":"#070a07","theme_color":"#070a07","lang":"en","icons":[{"src":"./assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{
+  "name": "Zeroday MineReady",
+  "short_name": "MineReady",
+  "description": "Mobile contractor readiness, bilingual training, and gate verification demo",
+  "start_url": "./?workspace=mine&lang=en",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070a07",
+  "theme_color": "#070a07",
+  "lang": "en",
+  "categories": ["business", "productivity", "education"],
+  "icons": [
+    {"src":"./assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ],
+  "shortcuts": [
+    {"name":"Mine Safety","url":"./?workspace=mine&lang=en"},
+    {"name":"Employer Admin","url":"./?workspace=employer&lang=en"},
+    {"name":"Trabajador","url":"./?workspace=worker&worker=ZMR-1042&lang=es"}
+  ]
+}

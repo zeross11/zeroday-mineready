@@ -1,18 +1,18 @@
 # Zeroday MineReady
 
-Mobile-first English/Spanish contractor readiness, training, and gate-verification demonstration for aggregate and mining sites.
+Mobile-first English/Spanish contractor readiness, training, mine approval, and gate-verification demonstration for aggregate and mining sites.
 
-## GitHub Pages deployment
+**Live demo:** `https://mineready.zerodaycyber.io`
 
-- Repository visibility: **Public**
-- Publishing source: **Deploy from a branch**
-- Branch: **gh-pages**
-- Folder: **/(root)**
-- Custom domain: `mineready.zerodaycyber.io`
-- DNS: `mineready CNAME zeross11.github.io`
+## Release 9.3.0
 
-The complete static application lives on `main`. The `Publish MineReady to gh-pages` workflow validates the required files and JavaScript syntax, then publishes the current `main` commit to `gh-pages`. No build command is required.
+- Mine, employer, and worker workspaces
+- Assignment-specific mine approval
+- Employer- and mine-owned training review
+- Phone training and bilingual knowledge checks
+- Real scannable worker-pass QR codes
+- Safe CSV import/export
+- Mobile, iPad, and desktop layouts
+- Installable/offline-capable PWA
 
-Before adding DNS, enable GitHub Pages in **Settings → Pages** using `gh-pages` and `/(root)`, then save `mineready.zerodaycyber.io` as the custom domain. After that, create the DNS CNAME and enable **Enforce HTTPS** when GitHub finishes certificate provisioning.
-
-This demo uses fictional data stored in the browser. It is not a production system of record and must not be used with real worker, training, or mine-access data.
+This public demonstration uses fictional data stored locally in each browser. It is not an authoritative production system, regulated training curriculum, or live access-control system.
