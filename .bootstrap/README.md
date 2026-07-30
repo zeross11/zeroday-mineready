@@ -1,1 +1,0 @@
-Temporary bootstrap assets for the MineReady Pages release.
