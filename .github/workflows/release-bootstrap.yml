@@ -27,12 +27,15 @@ jobs:
         run: |
           set -euo pipefail
           test -f .release/READY
+          test -f .release/part-000
           cat .release/part-* > /tmp/mineready-release.b64
           base64 --decode /tmp/mineready-release.b64 > /tmp/mineready-release.tar.xz
-          echo "5b35aaec09a7f102bf41c317041508a30b4a525c88ed4c9063895d9e2eba4468  /tmp/mineready-release.tar.xz" | sha256sum -c -
+          echo "a2b3640564292af9dcefbc81a2bab55d96072f68a21355ca95db2b5eda71c417  /tmp/mineready-release.tar.xz" | sha256sum -c -
           rm -rf /tmp/mineready-release
           mkdir -p /tmp/mineready-release
           tar -xJf /tmp/mineready-release.tar.xz -C /tmp/mineready-release
+          test -f /tmp/mineready-release/index.html
+          test -f /tmp/mineready-release/.github/workflows/deploy-pages.yml
 
       - name: Replace bootstrap files with application release
         shell: bash
