@@ -28,7 +28,7 @@
   }
 
   function approvalKey(worker) {
-    return [M.tx('site'), worker.employer, worker.workOrder, worker.role, worker.crew]
+    return ['silver-ridge-quarry', worker.employer, worker.workOrder, worker.role, worker.crew]
       .map((value) => String(value || '').trim().toLowerCase())
       .join('|');
   }
@@ -100,7 +100,7 @@
 
   function csvCell(value) {
     let text = String(value ?? '');
-    if (/^[=+\-@]/.test(text)) text = `'${text}`;
+    if (/^\s*[=+\-@]/.test(text)) text = `'${text}`;
     return `"${text.replaceAll('"', '""')}"`;
   }
 
@@ -344,16 +344,20 @@
   }
 
   function enhanceAssignments() {
-    if (S().page !== 'training' || S().role === 'worker') return;
+    if (S().page !== 'training') return;
+    const list = S().role === 'worker'
+      ? S().assignments.filter((assignment) => assignment.worker === S().active)
+      : S().assignments;
     const cards = [...document.querySelectorAll('.card.course')];
     cards.forEach((card, index) => {
-      const assignment = S().assignments[index];
+      const assignment = list[index];
       if (!assignment?.awaitingReview) return;
       const status = card.querySelector('.status');
-      if (status) {
+      if (status && status.dataset.reviewLang !== S().lang) {
         status.classList.remove('ready', 'blocked');
         status.classList.add('pending');
         status.textContent = assignmentReviewMessage(assignment);
+        status.dataset.reviewLang = S().lang;
       }
       const requiredRole = assignment.title === 'course1' ? 'mine' : 'employer';
       if (requiredRole === S().role && !card.querySelector('[data-hard-action="certify"]')) {
@@ -422,7 +426,8 @@
     if (S().page !== 'pass' || S().role !== 'worker') return;
     const qr = document.querySelector('.qr');
     const worker = M.W(S().active);
-    if (!qr || !worker || qr.dataset.real === 'true') return;
+    const demoQrIds = new Set(['ZMR-1042', 'ZMR-1049', 'ZMR-1056', 'ZMR-1088']);
+    if (!qr || !worker || !demoQrIds.has(worker.id) || qr.dataset.real === 'true') return;
     qr.dataset.real = 'true';
     qr.innerHTML = '';
     const image = document.createElement('img');
