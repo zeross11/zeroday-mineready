@@ -29,7 +29,7 @@ jobs:
           set -euo pipefail
           test -f .deploy-v10/READY
           part_count="$(find .deploy-v10 -maxdepth 1 -type f -name 'part-*' | wc -l | tr -d ' ')"
-          test "${part_count}" = "42"
+          test "${part_count}" = "22"
           cat .deploy-v10/part-* > /tmp/mineready-v10.b64
           base64 --decode /tmp/mineready-v10.b64 > /tmp/mineready-v10.tar.xz
           echo 'd46052a9de55ace62965a91bf095904ead02b62a6b0b2ac769eee760edbbf8c2  /tmp/mineready-v10.tar.xz' | sha256sum -c -
