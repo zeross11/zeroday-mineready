@@ -1,4 +1,4 @@
-const CACHE = 'mineready-v9.3.0';
+const CACHE = 'mineready-v9.3.1';
 const CORE = [
   './','./index.html','./404.html','./styles.css','./hardening.css','./data.js','./views.js','./app.js','./hardening.js',
   './manifest.webmanifest','./assets/icon.svg','./assets/qr/ZMR-1042.png','./assets/qr/ZMR-1049.png',
