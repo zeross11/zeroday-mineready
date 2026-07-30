@@ -3,8 +3,6 @@ name: Deploy MineReady 10.2 mobile compatibility release
 on:
   push:
     branches: [main]
-    paths:
-      - '.deploy-v102/READY'
   workflow_dispatch:
 
 permissions:
