@@ -10,7 +10,7 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'; upgrade-insecure-requests">
   <meta name="description" content="MineReady mobile Part 46 training ledger, selectable training, workforce readiness, QR scanning, and gate verification demonstration">
   <title>Zeroday MineReady</title>
   <link rel="icon" href="./assets/icon.svg?v=11.2.0" type="image/svg+xml">
@@ -44,5 +44,6 @@
   <script src="./mineready-v111.js?v=11.2.0" onerror="MR_START_FAIL('MineReady application file did not load')"></script>
   <script src="https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner.legacy.min.js" onerror="console.warn('QR scanner library did not load; photo and camera decoding will be unavailable')"></script>
   <script src="./mineready-v112.js?v=11.2.0" onerror="console.warn('MineReady camera and training enhancements did not load')"></script>
+  <script>(function(){function setRelease(){var p=document.querySelector('.demo-pill');if(p&&p.textContent!=='v11.2.0')p.textContent='v11.2.0';}setRelease();new MutationObserver(setRelease).observe(document.getElementById('app'),{childList:true,subtree:true});})();</script>
 </body>
 </html>
