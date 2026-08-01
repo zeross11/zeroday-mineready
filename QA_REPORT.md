@@ -4,6 +4,6 @@
 - Static: **success**
 - Playwright installation: **success**
 - Browser and workflow tests: **failure**
-- Workflow: https://github.com/zeross11/zeroday-mineready/actions/runs/30713427270
+- Workflow: https://github.com/zeross11/zeroday-mineready/actions/runs/30713579126
 
 Coverage: Chromium and WebKit phones, iPad, desktop, English/Spanish catalogs, catalog selection, training assignment, worker phone completion, authorized certification, QR photo decoding, roster selection, and live camera initialization.

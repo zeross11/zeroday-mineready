@@ -1,0 +1,125 @@
+{
+  "release": "11.2.0",
+  "status": "failure",
+  "checked_at": "2026-08-01T18:57:31.861Z",
+  "results": [
+    {
+      "test": "responsive_bilingual_catalog",
+      "engine": "chromium",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "test": "layout_chromium_320",
+      "passed": true
+    },
+    {
+      "test": "responsive_bilingual_catalog",
+      "engine": "chromium",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "test": "layout_chromium_390",
+      "passed": true
+    },
+    {
+      "test": "responsive_bilingual_catalog",
+      "engine": "chromium",
+      "viewport": {
+        "width": 820,
+        "height": 1180
+      },
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "test": "layout_chromium_ipad",
+      "passed": true
+    },
+    {
+      "test": "responsive_bilingual_catalog",
+      "engine": "chromium",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "test": "layout_chromium_desktop",
+      "passed": true
+    },
+    {
+      "test": "layout_webkit_mobile",
+      "passed": false,
+      "error": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n"
+    },
+    {
+      "test": "training_chromium",
+      "passed": false,
+      "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-mr-template=\"powered-haulage\"]')\n    - locator resolved to <button type=\"button\" class=\"mr-course-card\" data-mr-template=\"powered-haulage\">…</button>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - performing click action\n"
+    },
+    {
+      "test": "training_webkit",
+      "passed": false,
+      "error": "TimeoutError: page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n"
+    },
+    {
+      "test": "qr_photo_chromium",
+      "passed": false,
+      "error": "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded."
+    },
+    {
+      "test": "qr_photo_webkit",
+      "passed": false,
+      "error": "TimeoutError: page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n"
+    },
+    {
+      "test": "camera_permission_and_stream",
+      "engine": "chromium",
+      "state": {
+        "secure": true,
+        "media": true,
+        "stream": true,
+        "status": "Requesting camera access…"
+      },
+      "passed": true
+    },
+    {
+      "test": "camera_stream",
+      "passed": true
+    }
+  ],
+  "failures": [
+    {
+      "test": "layout_webkit_mobile",
+      "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n\n    at layout (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:30:16)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:128:3"
+    },
+    {
+      "test": "training_chromium",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-mr-template=\"powered-haulage\"]')\n    - locator resolved to <button type=\"button\" class=\"mr-course-card\" data-mr-template=\"powered-haulage\">…</button>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - performing click action\n\n    at training (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:53:64)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:129:3"
+    },
+    {
+      "test": "training_webkit",
+      "error": "page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n\n    at training (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:48:16)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:130:3"
+    },
+    {
+      "test": "qr_photo_chromium",
+      "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at qrPhoto (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:96:16)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:131:3"
+    },
+    {
+      "test": "qr_photo_webkit",
+      "error": "page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n\n    at qrPhoto (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:89:16)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:132:3"
+    }
+  ]
+}
