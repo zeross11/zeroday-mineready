@@ -1,7 +1,7 @@
 {
   "release": "11.2.0",
-  "status": "failure",
-  "checked_at": "2026-08-01T19:05:57.495Z",
+  "status": "success",
+  "checked_at": "2026-08-01T19:13:48.247Z",
   "results": [
     {
       "test": "responsive_bilingual_catalog",
@@ -14,7 +14,7 @@
       "passed": true
     },
     {
-      "test": "layout_chromium_320",
+      "test": "layout_320",
       "passed": true
     },
     {
@@ -28,7 +28,7 @@
       "passed": true
     },
     {
-      "test": "layout_chromium_390",
+      "test": "layout_390",
       "passed": true
     },
     {
@@ -42,7 +42,7 @@
       "passed": true
     },
     {
-      "test": "layout_chromium_ipad",
+      "test": "layout_ipad",
       "passed": true
     },
     {
@@ -56,7 +56,7 @@
       "passed": true
     },
     {
-      "test": "layout_chromium_desktop",
+      "test": "layout_desktop",
       "passed": true
     },
     {
@@ -70,11 +70,11 @@
       "passed": true
     },
     {
-      "test": "layout_webkit_mobile",
+      "test": "layout_webkit",
       "passed": true
     },
     {
-      "test": "catalog_assign_mobile_complete_authorized_certify",
+      "test": "catalog_assign_complete_certify",
       "engine": "chromium",
       "catalog_cards": 10,
       "passed": true
@@ -84,7 +84,7 @@
       "passed": true
     },
     {
-      "test": "catalog_assign_mobile_complete_authorized_certify",
+      "test": "catalog_assign_complete_certify",
       "engine": "webkit",
       "catalog_cards": 10,
       "passed": true
@@ -94,17 +94,27 @@
       "passed": true
     },
     {
-      "test": "qr_photo_chromium",
-      "passed": false,
-      "error": "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded."
+      "test": "qr_decode_photo_roster",
+      "engine": "chromium",
+      "payload": "https://mineready.zerodaycyber.io/?workspace=mine&worker=ZMR-1042&lang=en",
+      "passed": true
     },
     {
-      "test": "qr_photo_webkit",
-      "passed": false,
-      "error": "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded."
+      "test": "qr_chromium",
+      "passed": true
     },
     {
-      "test": "camera_permission_and_stream",
+      "test": "qr_decode_photo_roster",
+      "engine": "webkit",
+      "payload": "https://mineready.zerodaycyber.io/?workspace=mine&worker=ZMR-1042&lang=en",
+      "passed": true
+    },
+    {
+      "test": "qr_webkit",
+      "passed": true
+    },
+    {
+      "test": "camera_permission_stream",
       "engine": "chromium",
       "state": {
         "secure": true,
@@ -115,18 +125,9 @@
       "passed": true
     },
     {
-      "test": "camera_stream",
+      "test": "camera",
       "passed": true
     }
   ],
-  "failures": [
-    {
-      "test": "qr_photo_chromium",
-      "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at qrPhoto (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:22:527)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:8:34)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:38:3"
-    },
-    {
-      "test": "qr_photo_webkit",
-      "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at qrPhoto (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:22:527)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:8:34)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:39:3"
-    }
-  ]
+  "failures": []
 }
