@@ -1,0 +1,235 @@
+name: QA MineReady 11.2 camera and training release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/qa-camera-training-v112.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mineready-v112-qa
+  cancel-in-progress: false
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out candidate branch
+        uses: actions/checkout@v5
+        with:
+          ref: camera-training-v11-2-clean
+          fetch-depth: 0
+
+      - name: Static and security checks
+        id: static
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s index.html
+          test -s mineready-v111.js
+          test -s mineready-v111.css
+          test -s mineready-v112.js
+          test -s mineready-v112.css
+          test -s assets/qr/ZMR-1042.png
+          test -s assets/qr/ZMR-1049.png
+          node --check mineready-v111.js
+          node --check mineready-v112.js
+          grep -q 'data-app-version="11.2.0"' index.html
+          grep -q "var RELEASE='11.2.0'" mineready-v112.js
+          grep -q 'qr-scanner@1.4.2/qr-scanner.legacy.min.js' index.html
+          grep -q 'mineready-v112.css' index.html
+          grep -q 'mineready-v112.js' index.html
+          grep -q "style-src 'self' 'unsafe-inline'" index.html
+          grep -q "media-src 'self' blob:" index.html
+          grep -q "worker-src 'self' blob:" index.html
+          grep -q 'selectable_training_catalog' health.json
+          grep -q 'camera_qr_scanning' health.json
+          ! grep -q 'serviceWorker.register' index.html
+          ! grep -q 'serviceWorker.register' mineready-v111.js
+          ! grep -q 'serviceWorker.register' mineready-v112.js
+
+      - name: Browser and workflow tests
+        id: browser
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium webkit >/dev/null
+          python3 -m http.server 4173 >/tmp/mineready-v112-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/health.json >/dev/null && break; sleep 1; done
+          cat > /tmp/mineready-v112-qa.js <<'NODE'
+          const { chromium, webkit } = require('playwright');
+          const fs = require('fs');
+          const base = 'http://127.0.0.1:4173/';
+          const results = [];
+
+          function collectErrors(page) {
+            const errors=[];
+            page.on('pageerror', error => errors.push(String(error)));
+            page.on('console', message => { if (message.type()==='error') errors.push(message.text()); });
+            return errors;
+          }
+
+          async function responsive(browserType, engine, viewport) {
+            const browser = await browserType.launch({headless:true});
+            const page = await browser.newPage({viewport});
+            const errors = collectErrors(page);
+            await page.goto(base+'?reset=1&workspace=mine&lang=en',{waitUntil:'networkidle'});
+            await page.waitForSelector('.app',{timeout:12000});
+            await page.click('[data-page="training"]');
+            await page.waitForSelector('#mrTrainingLibrary');
+            const overflow = await page.evaluate(() => document.documentElement.scrollWidth-document.documentElement.clientWidth);
+            if (overflow > 1) throw new Error(`${engine} horizontal overflow ${overflow}px at ${viewport.width}`);
+            await page.click('[data-lang="es"]');
+            await page.waitForSelector('text=Biblioteca de capacitación seleccionable');
+            if (errors.length) throw new Error(`${engine} browser errors: ${errors.join(' | ')}`);
+            results.push({test:'responsive_bilingual_catalog',engine,viewport,overflow,passed:true});
+            await browser.close();
+          }
+
+          async function trainingFlow(browserType, engine) {
+            const browser = await browserType.launch({headless:true});
+            const page = await browser.newPage({viewport:{width:390,height:844}});
+            const errors = collectErrors(page);
+            await page.goto(base+'?reset=1&workspace=employer&worker=ZMR-1056&lang=en',{waitUntil:'networkidle'});
+            await page.waitForSelector('.app');
+            await page.click('[data-page="training"]');
+            await page.waitForSelector('#mrTrainingLibrary');
+            const cards = await page.locator('[data-mr-template]').count();
+            if (cards < 8) throw new Error(`Only ${cards} employer training choices rendered`);
+            await page.click('[data-mr-template="powered-haulage"]');
+            await page.waitForSelector('#mrCourseTemplate');
+            if (await page.inputValue('#mrCourseTemplate') !== 'powered-haulage') throw new Error('Catalog selection did not persist in the assignment form');
+            if (await page.inputValue('#asProgram') !== '46.8') throw new Error('Program was not populated');
+            if (!(await page.inputValue('#asTitle')).includes('Powered Haulage')) throw new Error('Title was not populated');
+            if (await page.inputValue('#asMinutes') !== '30') throw new Error('Minutes were not populated');
+            await page.check('input[name="assignWorker"][value="ZMR-1056"]');
+            await page.selectOption('#asLang','en');
+            await page.click('[data-action="assign-save"]');
+            await page.waitForSelector('.assignment-card:has-text("Powered Haulage")');
+            await page.selectOption('#workspace','worker');
+            await page.click('[data-page="training"]');
+            const workerCard=page.locator('.assignment-card',{hasText:'Powered Haulage'}).first();
+            await workerCard.locator('[data-start-course]').click();
+            for(let i=0;i<3;i++) await page.click('[data-course="next"]');
+            for(let i=0;i<3;i++) await page.check(`input[name="q${i}"][value="ok"]`);
+            await page.check('#courseAck');
+            await page.click('[data-course="submit"]');
+            await page.selectOption('#workspace','employer');
+            await page.click('[data-page="training"]');
+            const review=page.locator('.assignment-card',{hasText:'Powered Haulage'}).first();
+            await review.locator('[data-review]').click();
+            await page.click('[data-action="review-certify"]');
+            await page.waitForSelector('.assignment-card:has-text("Powered Haulage") .status.certified');
+            if (errors.length) throw new Error(`${engine} training errors: ${errors.join(' | ')}`);
+            results.push({test:'select_assign_complete_review_certify',engine,catalog_cards:cards,passed:true});
+            await browser.close();
+          }
+
+          async function qrPhoto(browserType, engine) {
+            const browser = await browserType.launch({headless:true});
+            const page = await browser.newPage({viewport:{width:390,height:844}});
+            const errors = collectErrors(page);
+            await page.goto(base+'?reset=1&workspace=mine&worker=ZMR-1049&lang=en',{waitUntil:'networkidle'});
+            await page.waitForSelector('.app');
+            await page.waitForFunction(() => typeof window.QrScanner === 'function',{timeout:15000});
+            await page.click('[data-page="gate"]');
+            await page.waitForSelector('#mrScanButton');
+            await page.click('#mrScanButton');
+            await page.waitForSelector('#mrScanner');
+            await page.setInputFiles('#mrQrFile','assets/qr/ZMR-1042.png');
+            await page.waitForFunction(() => document.querySelector('#gateWorker')?.value === 'ZMR-1042',{timeout:15000});
+            if (await page.locator('#mrScanner').count()) throw new Error('Scanner did not close after a successful QR result');
+            if (errors.length) throw new Error(`${engine} QR errors: ${errors.join(' | ')}`);
+            results.push({test:'qr_photo_decode_roster_selection',engine,worker:'ZMR-1042',passed:true});
+            await browser.close();
+          }
+
+          async function cameraStream() {
+            const browser = await chromium.launch({headless:true,args:['--use-fake-ui-for-media-stream','--use-fake-device-for-media-stream']});
+            const context = await browser.newContext({viewport:{width:390,height:844},permissions:['camera']});
+            const page = await context.newPage();
+            const errors = collectErrors(page);
+            await page.goto(base+'?reset=1&workspace=mine&lang=en',{waitUntil:'networkidle'});
+            await page.waitForFunction(() => typeof window.QrScanner === 'function',{timeout:15000});
+            await page.click('[data-page="gate"]');
+            await page.click('#mrScanButton');
+            await page.waitForSelector('#mrScannerVideo');
+            await page.waitForFunction(() => {
+              const video=document.querySelector('#mrScannerVideo');
+              const status=document.querySelector('#mrScannerStatus')?.textContent||'';
+              return Boolean(video?.srcObject) || /Camera ready|could not start|unavailable/i.test(status);
+            },{timeout:15000});
+            const state = await page.evaluate(() => ({secure:window.isSecureContext,media:Boolean(navigator.mediaDevices?.getUserMedia),stream:Boolean(document.querySelector('#mrScannerVideo')?.srcObject),status:document.querySelector('#mrScannerStatus')?.textContent||''}));
+            if (!state.secure || !state.media) throw new Error('Secure camera APIs were unavailable');
+            if (!state.stream && !/Camera ready/i.test(state.status)) throw new Error(`Camera did not initialize: ${state.status}`);
+            if (errors.length) throw new Error(`Camera errors: ${errors.join(' | ')}`);
+            results.push({test:'explicit_camera_permission_and_stream',engine:'chromium',state,passed:true});
+            await browser.close();
+          }
+
+          (async()=>{
+            await responsive(chromium,'chromium',{width:320,height:568});
+            await responsive(chromium,'chromium',{width:390,height:844});
+            await responsive(chromium,'chromium',{width:820,height:1180});
+            await responsive(chromium,'chromium',{width:1440,height:1000});
+            await responsive(webkit,'webkit',{width:390,height:844});
+            await trainingFlow(chromium,'chromium');
+            await trainingFlow(webkit,'webkit');
+            await qrPhoto(chromium,'chromium');
+            await qrPhoto(webkit,'webkit');
+            await cameraStream();
+            fs.writeFileSync('QA_BROWSER.json',JSON.stringify({release:'11.2.0',status:'success',checked_at:new Date().toISOString(),results},null,2)+'\n');
+          })().catch(error=>{console.error(error);process.exit(1);});
+          NODE
+          node /tmp/mineready-v112-qa.js
+
+      - name: Record candidate QA result
+        if: always()
+        shell: bash
+        env:
+          STATIC_OUTCOME: ${{ steps.static.outcome }}
+          BROWSER_OUTCOME: ${{ steps.browser.outcome }}
+        run: |
+          set -euo pipefail
+          STATUS=success
+          if [ "$STATIC_OUTCOME" != success ] || [ "$BROWSER_OUTCOME" != success ]; then STATUS=failure; fi
+          cat > QA_STATUS.json <<JSON
+          {
+            "release": "11.2.0",
+            "status": "$STATUS",
+            "static": "$STATIC_OUTCOME",
+            "browser": "$BROWSER_OUTCOME",
+            "checked_at": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
+            "workflow_run": "https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          }
+          JSON
+          cat > QA_REPORT.md <<MD
+          # MineReady 11.2.0 QA and Red-Team Report
+
+          - Overall status: **$STATUS**
+          - Static and security checks: **$STATIC_OUTCOME**
+          - Browser and workflow checks: **$BROWSER_OUTCOME**
+          - Workflow: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+
+          Tests cover Chromium and WebKit phone rendering, iPad and desktop widths, bilingual training catalogs, catalog-to-assignment population, worker mobile completion, authorized certification, QR decoding from an uploaded phone photo, roster selection, and explicit live-camera permission/stream initialization.
+          MD
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add QA_STATUS.json QA_REPORT.md QA_BROWSER.json 2>/dev/null || git add QA_STATUS.json QA_REPORT.md
+          git commit -m "test: record MineReady 11.2 QA result [$STATUS]" || true
+          git push origin HEAD:camera-training-v11-2-clean
+
+      - name: Fail unsuccessful candidate
+        if: steps.static.outcome != 'success' || steps.browser.outcome != 'success'
+        run: exit 1
