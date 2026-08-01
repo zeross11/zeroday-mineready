@@ -1,0 +1,173 @@
+name: QA MineReady 11.2 regenerated QR release r5
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/qa-camera-training-v112-r5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: camera-training-v11-2-clean
+          fetch-depth: 0
+
+      - name: Regenerate standards-style worker QR passes
+        id: qrbuild
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check 'qrcode[pil]==7.4.2' >/dev/null
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import qrcode
+          from qrcode.constants import ERROR_CORRECT_Q
+
+          code=Path('mineready-v111.js').read_text(encoding='utf-8')
+          ids=sorted(set(re.findall(r'ZMR-[A-Za-z0-9_-]+',code)))
+          if len(ids)<4:
+              raise SystemExit(f'Expected at least four seeded worker IDs, found {ids}')
+          out=Path('assets/qr')
+          out.mkdir(parents=True,exist_ok=True)
+          for old in out.glob('*.png'):
+              old.unlink()
+          for worker_id in ids:
+              payload=f'https://mineready.zerodaycyber.io/?workspace=mine&worker={worker_id}&lang=en'
+              qr=qrcode.QRCode(version=None,error_correction=ERROR_CORRECT_Q,box_size=12,border=4)
+              qr.add_data(payload)
+              qr.make(fit=True)
+              image=qr.make_image(fill_color='black',back_color='white').convert('RGB')
+              image.save(out/f'{worker_id}.png',optimize=True)
+          Path('QR_MANIFEST.json').write_text(__import__('json').dumps({'format':'black-on-white','error_correction':'Q','payload':'custom-domain worker URL','workers':ids},indent=2)+'\n')
+          print('Generated',len(ids),'QR passes:',', '.join(ids))
+          PY
+          test -s assets/qr/ZMR-1042.png
+          test -s QR_MANIFEST.json
+
+      - name: Static validation
+        id: static
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check mineready-v111.js
+          node --check mineready-v112.js
+          node --check vendor/qr-scanner.legacy.min.js
+          grep -q 'data-app-version="11.2.0"' index.html
+          grep -q './vendor/qr-scanner.legacy.min.js?v=1.4.2' index.html
+          ! grep -q 'cdn.jsdelivr.net' index.html
+          grep -q 'selectable_training_catalog' health.json
+          grep -q 'camera_qr_scanning' health.json
+          test "$(find assets/qr -maxdepth 1 -name 'ZMR-*.png' | wc -l | tr -d ' ')" -ge 4
+
+      - name: Install Playwright
+        id: install
+        continue-on-error: true
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium webkit >/dev/null
+
+      - name: Full browser, training, QR, and camera validation
+        id: browser
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/mineready-v112-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/health.json >/dev/null && break; sleep 1; done
+          cat > qa-v112.cjs <<'NODE'
+          const { chromium, webkit } = require('playwright');
+          const fs=require('fs');
+          const base='http://127.0.0.1:4173/';
+          const results=[],failures=[];
+          function errorsFor(page){const e=[];page.on('pageerror',x=>e.push(String(x)));page.on('console',m=>{if(m.type()==='error')e.push(m.text())});return e}
+          async function clickVisible(page,selector){const loc=page.locator(selector+':visible').first();await loc.waitFor({state:'visible',timeout:15000});await loc.click()}
+          async function test(name,fn){try{await fn();results.push({test:name,passed:true})}catch(error){failures.push({test:name,error:String(error&&error.stack||error)});results.push({test:name,passed:false,error:String(error)})}}
+
+          async function layout(browserType,engine,viewport){
+            const browser=await browserType.launch({headless:true});
+            try{const page=await browser.newPage({viewport});const errors=errorsFor(page);await page.goto(base+'?reset=1&workspace=mine&lang=en',{waitUntil:'networkidle'});await page.waitForSelector('.app',{timeout:15000});await clickVisible(page,'[data-page="training"]');await page.waitForSelector('#mrTrainingLibrary');const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);if(overflow>1)throw new Error(`${engine} overflow ${overflow}px at ${viewport.width}`);await clickVisible(page,'[data-lang="es"]');await page.waitForSelector('text=Biblioteca de capacitación seleccionable');if(errors.length)throw new Error(`${engine} errors: ${errors.join(' | ')}`);results.push({test:'responsive_bilingual_catalog',engine,viewport,overflow,passed:true})}finally{await browser.close()}
+          }
+
+          async function training(browserType,engine){
+            const browser=await browserType.launch({headless:true});
+            try{const page=await browser.newPage({viewport:{width:390,height:844}});const errors=errorsFor(page);await page.goto(base+'?reset=1&workspace=employer&worker=ZMR-1056&lang=en',{waitUntil:'networkidle'});await page.waitForSelector('.app');await clickVisible(page,'[data-page="training"]');await page.waitForSelector('#mrTrainingLibrary');const cards=await page.locator('[data-mr-template]').count();if(cards<8)throw new Error(`Expected 8+ selectable trainings, saw ${cards}`);await page.locator('[data-mr-template="powered-haulage"]').click();await page.waitForSelector('#mrCourseTemplate');if(await page.inputValue('#mrCourseTemplate')!=='powered-haulage')throw new Error('Template selection did not persist');if(await page.inputValue('#asProgram')!=='46.8')throw new Error('Program not populated');if(!(await page.inputValue('#asTitle')).includes('Powered Haulage'))throw new Error('Title not populated');if(await page.inputValue('#asMinutes')!=='30')throw new Error('Minutes not populated');await page.check('input[name="assignWorker"][value="ZMR-1056"]');await page.selectOption('#asLang','en');await page.locator('[data-action="assign-save"]').click();await page.waitForSelector('.assignment-card:has-text("Powered Haulage")');await page.selectOption('#workspace','worker');await clickVisible(page,'[data-page="training"]');const card=page.locator('.assignment-card',{hasText:'Powered Haulage'}).first();await card.locator('[data-start-course]').click();for(let i=0;i<3;i++)await page.locator('[data-course="next"]').click();for(let i=0;i<3;i++)await page.check(`input[name="q${i}"][value="ok"]`);await page.check('#courseAck');await page.locator('[data-course="submit"]').click();await page.selectOption('#workspace','employer');await clickVisible(page,'[data-page="training"]');const review=page.locator('.assignment-card',{hasText:'Powered Haulage'}).first();await review.locator('[data-review]').click();await page.locator('[data-action="review-certify"]').click();await page.waitForSelector('.assignment-card:has-text("Powered Haulage") .status.certified');if(errors.length)throw new Error(`${engine} training errors: ${errors.join(' | ')}`);results.push({test:'catalog_assign_complete_certify',engine,catalog_cards:cards,passed:true})}finally{await browser.close()}
+          }
+
+          async function qrPhoto(browserType,engine){
+            const browser=await browserType.launch({headless:true});
+            try{const page=await browser.newPage({viewport:{width:390,height:844}});const errors=errorsFor(page);await page.goto(base+'?reset=1&workspace=mine&worker=ZMR-1049&lang=en',{waitUntil:'networkidle'});await page.waitForSelector('.app');await page.waitForFunction(()=>typeof window.QrScanner==='function',{timeout:15000});const direct=await page.evaluate(async()=>{const r=await QrScanner.scanImage('./assets/qr/ZMR-1042.png',{returnDetailedScanResult:true,alsoTryWithoutScanRegion:true});return r&&r.data||r});if(!String(direct).includes('ZMR-1042'))throw new Error(`Direct decode returned ${direct}`);await clickVisible(page,'[data-page="gate"]');await page.locator('#mrScanButton').click();await page.waitForSelector('#mrScanner');await page.setInputFiles('#mrQrFile','assets/qr/ZMR-1042.png');await page.waitForFunction(()=>document.querySelector('#gateWorker')&&document.querySelector('#gateWorker').value==='ZMR-1042',{timeout:20000});if(await page.locator('#mrScanner').count())throw new Error('Scanner remained open');if(errors.length)throw new Error(`${engine} QR errors: ${errors.join(' | ')}`);results.push({test:'qr_decode_photo_roster',engine,payload:direct,passed:true})}finally{await browser.close()}
+          }
+
+          async function camera(){
+            const browser=await chromium.launch({headless:true,args:['--use-fake-ui-for-media-stream','--use-fake-device-for-media-stream']});
+            try{const context=await browser.newContext({viewport:{width:390,height:844},permissions:['camera']});const page=await context.newPage();const errors=errorsFor(page);await page.goto(base+'?reset=1&workspace=mine&lang=en',{waitUntil:'networkidle'});await page.waitForFunction(()=>typeof window.QrScanner==='function',{timeout:15000});await clickVisible(page,'[data-page="gate"]');await page.locator('#mrScanButton').click();await page.waitForSelector('#mrScannerVideo');await page.waitForFunction(()=>{const v=document.querySelector('#mrScannerVideo');const s=(document.querySelector('#mrScannerStatus')||{}).textContent||'';return Boolean(v&&v.srcObject)||/Camera ready|could not start|unavailable/i.test(s)},{timeout:20000});const state=await page.evaluate(()=>({secure:window.isSecureContext,media:Boolean(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),stream:Boolean(document.querySelector('#mrScannerVideo')&&document.querySelector('#mrScannerVideo').srcObject),status:(document.querySelector('#mrScannerStatus')||{}).textContent||''}));if(!state.secure||!state.media)throw new Error('Secure camera APIs unavailable');if(!state.stream&&!/Camera ready/i.test(state.status))throw new Error(`Camera failed: ${state.status}`);if(errors.length)throw new Error(`Camera errors: ${errors.join(' | ')}`);results.push({test:'camera_permission_stream',engine:'chromium',state,passed:true})}finally{await browser.close()}
+          }
+
+          (async()=>{
+            await test('layout_320',()=>layout(chromium,'chromium',{width:320,height:568}));
+            await test('layout_390',()=>layout(chromium,'chromium',{width:390,height:844}));
+            await test('layout_ipad',()=>layout(chromium,'chromium',{width:820,height:1180}));
+            await test('layout_desktop',()=>layout(chromium,'chromium',{width:1440,height:1000}));
+            await test('layout_webkit',()=>layout(webkit,'webkit',{width:390,height:844}));
+            await test('training_chromium',()=>training(chromium,'chromium'));
+            await test('training_webkit',()=>training(webkit,'webkit'));
+            await test('qr_chromium',()=>qrPhoto(chromium,'chromium'));
+            await test('qr_webkit',()=>qrPhoto(webkit,'webkit'));
+            await test('camera',camera);
+            fs.writeFileSync('QA_BROWSER.json',JSON.stringify({release:'11.2.0',status:failures.length?'failure':'success',checked_at:new Date().toISOString(),results,failures},null,2)+'\n');
+            if(failures.length){console.error(JSON.stringify(failures,null,2));process.exit(1)}
+          })();
+          NODE
+          node qa-v112.cjs
+
+      - name: Record final candidate QA
+        if: always()
+        shell: bash
+        env:
+          QRBUILD_OUTCOME: ${{ steps.qrbuild.outcome }}
+          STATIC_OUTCOME: ${{ steps.static.outcome }}
+          INSTALL_OUTCOME: ${{ steps.install.outcome }}
+          BROWSER_OUTCOME: ${{ steps.browser.outcome }}
+        run: |
+          set -euo pipefail
+          STATUS=success
+          for RESULT in "$QRBUILD_OUTCOME" "$STATIC_OUTCOME" "$INSTALL_OUTCOME" "$BROWSER_OUTCOME"; do [ "$RESULT" = success ] || STATUS=failure; done
+          cat > QA_STATUS.json <<JSON
+          {"release":"11.2.0","status":"$STATUS","qr_build":"$QRBUILD_OUTCOME","static":"$STATIC_OUTCOME","install":"$INSTALL_OUTCOME","browser":"$BROWSER_OUTCOME","checked_at":"$(date -u +'%Y-%m-%dT%H:%M:%SZ')","workflow_run":"https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"}
+          JSON
+          cat > QA_REPORT.md <<MD
+          # MineReady 11.2.0 QA and Red-Team Report
+
+          - Overall: **$STATUS**
+          - Regenerated standards-style QR passes: **$QRBUILD_OUTCOME**
+          - Static/security checks: **$STATIC_OUTCOME**
+          - Browser installation: **$INSTALL_OUTCOME**
+          - Full browser/workflow matrix: **$BROWSER_OUTCOME**
+          - Workflow: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}
+
+          Coverage: Chromium and WebKit mobile, iPad, desktop, English/Spanish selectable training, assignment, worker completion, authorized certification, direct QR decoding, phone-photo QR selection, roster selection, and explicit camera-stream initialization.
+          MD
+          rm -f qa-v112.cjs package.json package-lock.json QR_DIAGNOSTIC.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/qr QR_MANIFEST.json QA_STATUS.json QA_REPORT.md QA_BROWSER.json
+          git commit -m "fix: replace worker QR passes and complete MineReady 11.2 QA [$STATUS]" || true
+          git push origin HEAD:camera-training-v11-2-clean
+
+      - name: Fail unsuccessful candidate
+        if: steps.qrbuild.outcome != 'success' || steps.static.outcome != 'success' || steps.install.outcome != 'success' || steps.browser.outcome != 'success'
+        run: exit 1
