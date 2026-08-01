@@ -1,0 +1,113 @@
+name: Verify live MineReady 11.2 release
+
+on:
+  push:
+    branches: [live-qa-v11-2]
+    paths:
+      - '.github/workflows/live-qa-v112.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Wait for GitHub Pages release
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in {1..60}; do
+            BODY="$(curl -fsS --connect-timeout 10 --max-time 20 'https://mineready.zerodaycyber.io/health.json?v=1120' || true)"
+            echo "$BODY"
+            if echo "$BODY" | grep -q '"version":"11.2.0"'; then exit 0; fi
+            sleep 5
+          done
+          echo 'MineReady 11.2 did not reach the live health endpoint in time.' >&2
+          exit 1
+      - name: Install browsers
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium webkit >/dev/null
+      - name: Test the live HTTPS application
+        shell: bash
+        run: |
+          cat > live-qa.cjs <<'NODE'
+          const { chromium, webkit }=require('playwright');
+          const fs=require('fs');
+          const live='https://mineready.zerodaycyber.io/';
+          const results=[];
+          const errorsFor=page=>{const errors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});return errors};
+          async function clickVisible(page,selector){const loc=page.locator(selector+':visible').first();await loc.waitFor({state:'visible',timeout:20000});await loc.click()}
+
+          async function browserFlow(browserType,engine){
+            const browser=await browserType.launch({headless:true});
+            try{
+              const page=await browser.newPage({viewport:{width:390,height:844}});
+              const errors=errorsFor(page);
+              await page.goto(live+'?reset=1&workspace=employer&worker=ZMR-1056&lang=en&v=1120',{waitUntil:'networkidle'});
+              await page.waitForSelector('.app',{timeout:30000});
+              await clickVisible(page,'[data-page="training"]');
+              await page.waitForSelector('#mrTrainingLibrary');
+              const choices=await page.locator('[data-mr-template]').count();
+              if(choices<8)throw new Error(`Only ${choices} training choices rendered`);
+              await page.locator('[data-mr-template="powered-haulage"]').click();
+              await page.waitForSelector('#mrCourseTemplate');
+              if(await page.inputValue('#mrCourseTemplate')!=='powered-haulage')throw new Error('Training template was not selected');
+              if(!(await page.inputValue('#asTitle')).includes('Powered Haulage'))throw new Error('Training title was not populated');
+              await page.locator('[data-action="modal-close"]').click();
+              await page.selectOption('#workspace','mine');
+              await clickVisible(page,'[data-page="gate"]');
+              await page.waitForSelector('#mrScanButton');
+              await page.locator('#mrScanButton').click();
+              await page.waitForSelector('#mrScanner');
+              await page.setInputFiles('#mrQrFile','assets/qr/ZMR-1042.png');
+              await page.waitForFunction(()=>document.querySelector('#gateWorker')&&document.querySelector('#gateWorker').value==='ZMR-1042',{timeout:30000});
+              const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+              if(overflow>1)throw new Error(`Mobile horizontal overflow ${overflow}px`);
+              if(errors.length)throw new Error(`${engine} page errors: ${errors.join(' | ')}`);
+              results.push({test:'live_training_selection_and_qr_photo',engine,choices,overflow,passed:true});
+            }finally{await browser.close()}
+          }
+
+          async function cameraFlow(){
+            const browser=await chromium.launch({headless:true,args:['--use-fake-ui-for-media-stream','--use-fake-device-for-media-stream']});
+            try{
+              const context=await browser.newContext({viewport:{width:390,height:844}});
+              await context.grantPermissions(['camera'],{origin:'https://mineready.zerodaycyber.io'});
+              const page=await context.newPage();
+              const errors=errorsFor(page);
+              await page.goto(live+'?reset=1&workspace=mine&lang=en&v=1120',{waitUntil:'networkidle'});
+              await page.waitForSelector('.app',{timeout:30000});
+              await clickVisible(page,'[data-page="gate"]');
+              await page.locator('#mrScanButton').click();
+              await page.waitForSelector('#mrScannerVideo');
+              await page.waitForFunction(()=>{const video=document.querySelector('#mrScannerVideo');const status=(document.querySelector('#mrScannerStatus')||{}).textContent||'';return Boolean(video&&video.srcObject)||/Camera ready|could not start|unavailable/i.test(status)},{timeout:30000});
+              const state=await page.evaluate(()=>({secure:window.isSecureContext,media:Boolean(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia),stream:Boolean(document.querySelector('#mrScannerVideo')&&document.querySelector('#mrScannerVideo').srcObject),status:(document.querySelector('#mrScannerStatus')||{}).textContent||''}));
+              if(!state.secure||!state.media||!state.stream)throw new Error(`Live camera path failed: ${JSON.stringify(state)}`);
+              if(errors.length)throw new Error(`Camera page errors: ${errors.join(' | ')}`);
+              results.push({test:'live_https_camera_permission_stream',engine:'chromium',state,passed:true});
+            }finally{await browser.close()}
+          }
+
+          (async()=>{
+            await browserFlow(chromium,'chromium');
+            await browserFlow(webkit,'webkit');
+            await cameraFlow();
+            fs.writeFileSync('LIVE_QA_STATUS.json',JSON.stringify({release:'11.2.0',status:'success',checked_at:new Date().toISOString(),url:live,results},null,2)+'\n');
+          })().catch(error=>{fs.writeFileSync('LIVE_QA_STATUS.json',JSON.stringify({release:'11.2.0',status:'failure',checked_at:new Date().toISOString(),url:live,error:String(error&&error.stack||error),results},null,2)+'\n');console.error(error);process.exit(1)});
+          NODE
+          node live-qa.cjs
+      - name: Record live result
+        if: always()
+        run: |
+          rm -f live-qa.cjs package.json package-lock.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add LIVE_QA_STATUS.json
+          git commit -m 'test: record live MineReady 11.2 verification' || true
+          git push origin HEAD:live-qa-v11-2
