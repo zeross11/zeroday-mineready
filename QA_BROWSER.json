@@ -1,7 +1,7 @@
 {
   "release": "11.2.0",
   "status": "failure",
-  "checked_at": "2026-08-01T18:57:31.861Z",
+  "checked_at": "2026-08-01T19:05:57.495Z",
   "results": [
     {
       "test": "responsive_bilingual_catalog",
@@ -60,19 +60,38 @@
       "passed": true
     },
     {
+      "test": "responsive_bilingual_catalog",
+      "engine": "webkit",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": 0,
+      "passed": true
+    },
+    {
       "test": "layout_webkit_mobile",
-      "passed": false,
-      "error": "TimeoutError: page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n"
+      "passed": true
+    },
+    {
+      "test": "catalog_assign_mobile_complete_authorized_certify",
+      "engine": "chromium",
+      "catalog_cards": 10,
+      "passed": true
     },
     {
       "test": "training_chromium",
-      "passed": false,
-      "error": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-mr-template=\"powered-haulage\"]')\n    - locator resolved to <button type=\"button\" class=\"mr-course-card\" data-mr-template=\"powered-haulage\">…</button>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - performing click action\n"
+      "passed": true
+    },
+    {
+      "test": "catalog_assign_mobile_complete_authorized_certify",
+      "engine": "webkit",
+      "catalog_cards": 10,
+      "passed": true
     },
     {
       "test": "training_webkit",
-      "passed": false,
-      "error": "TimeoutError: page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n"
+      "passed": true
     },
     {
       "test": "qr_photo_chromium",
@@ -82,7 +101,7 @@
     {
       "test": "qr_photo_webkit",
       "passed": false,
-      "error": "TimeoutError: page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n"
+      "error": "TimeoutError: page.waitForFunction: Timeout 30000ms exceeded."
     },
     {
       "test": "camera_permission_and_stream",
@@ -102,24 +121,12 @@
   ],
   "failures": [
     {
-      "test": "layout_webkit_mobile",
-      "error": "page.waitForSelector: Timeout 15000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n\n    at layout (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:30:16)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:128:3"
-    },
-    {
-      "test": "training_chromium",
-      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('[data-mr-template=\"powered-haulage\"]')\n    - locator resolved to <button type=\"button\" class=\"mr-course-card\" data-mr-template=\"powered-haulage\">…</button>\n  - attempting click action\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - performing click action\n\n    at training (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:53:64)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:129:3"
-    },
-    {
-      "test": "training_webkit",
-      "error": "page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n\n    at training (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:48:16)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:130:3"
-    },
-    {
       "test": "qr_photo_chromium",
-      "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at qrPhoto (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:96:16)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:131:3"
+      "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at qrPhoto (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:22:527)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:8:34)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:38:3"
     },
     {
       "test": "qr_photo_webkit",
-      "error": "page.waitForSelector: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.app') to be visible\n\n    at qrPhoto (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:89:16)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:20:7)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:132:3"
+      "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at qrPhoto (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:22:527)\n    at async test (/home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:8:34)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/qa-v112.cjs:39:3"
     }
   ]
 }
