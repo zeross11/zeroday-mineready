@@ -1,0 +1,8 @@
+{
+  "release": "11.2.0",
+  "status": "failure",
+  "static": "success",
+  "browser": "failure",
+  "checked_at": "2026-08-01T18:48:02Z",
+  "workflow_run": "https://github.com/zeross11/zeroday-mineready/actions/runs/30713320238"
+}
