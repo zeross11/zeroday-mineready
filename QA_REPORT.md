@@ -1,8 +1,9 @@
 # MineReady 11.2.0 QA and Red-Team Report
 
-- Overall status: **failure**
-- Static and security checks: **success**
-- Browser and workflow checks: **failure**
-- Workflow: https://github.com/zeross11/zeroday-mineready/actions/runs/30713320238
+- Overall: **failure**
+- Static: **success**
+- Playwright installation: **success**
+- Browser and workflow tests: **failure**
+- Workflow: https://github.com/zeross11/zeroday-mineready/actions/runs/30713427270
 
-Tests cover Chromium and WebKit phone rendering, iPad and desktop widths, bilingual training catalogs, catalog-to-assignment population, worker mobile completion, authorized certification, QR decoding from an uploaded phone photo, roster selection, and explicit live-camera permission/stream initialization.
+Coverage: Chromium and WebKit phones, iPad, desktop, English/Spanish catalogs, catalog selection, training assignment, worker phone completion, authorized certification, QR photo decoding, roster selection, and live camera initialization.
