@@ -1,0 +1,70 @@
+name: Diagnose MineReady 11.2 QR decoding
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagnose-qr-v112.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: camera-training-v11-2-clean
+          fetch-depth: 0
+      - run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium webkit >/dev/null
+      - name: Run direct decoder diagnostics
+        shell: bash
+        run: |
+          python3 -m http.server 4173 >/tmp/qr-http.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break; sleep 1; done
+          cat > diagnose-qr.cjs <<'NODE'
+          const { chromium, webkit }=require('playwright');
+          const fs=require('fs');
+          const results=[];
+          async function run(browserType,engine){
+            const browser=await browserType.launch({headless:true});
+            try{
+              const page=await browser.newPage({viewport:{width:390,height:844}});
+              const consoleMessages=[];
+              page.on('console',m=>consoleMessages.push({type:m.type(),text:m.text()}));
+              page.on('pageerror',e=>consoleMessages.push({type:'pageerror',text:String(e)}));
+              await page.goto('http://127.0.0.1:4173/?reset=1&workspace=mine&lang=en',{waitUntil:'networkidle'});
+              await page.waitForFunction(()=>typeof window.QrScanner==='function',{timeout:15000});
+              const direct=await page.evaluate(async()=>{
+                const out={};
+                try{const r=await QrScanner.scanImage('./assets/qr/ZMR-1042.png',{returnDetailedScanResult:true,alsoTryWithoutScanRegion:true});out.url={ok:true,data:r&&r.data||r};}
+                catch(e){out.url={ok:false,name:e&&e.name,message:e&&e.message,stack:e&&e.stack};}
+                try{const response=await fetch('./assets/qr/ZMR-1042.png');const blob=await response.blob();const r=await QrScanner.scanImage(blob,{returnDetailedScanResult:true,alsoTryWithoutScanRegion:true});out.blob={ok:true,data:r&&r.data||r,type:blob.type,size:blob.size};}
+                catch(e){out.blob={ok:false,name:e&&e.name,message:e&&e.message,stack:e&&e.stack};}
+                try{const img=new Image();img.src='./assets/qr/ZMR-1042.png';await img.decode();const r=await QrScanner.scanImage(img,{returnDetailedScanResult:true,alsoTryWithoutScanRegion:true});out.image={ok:true,data:r&&r.data||r,width:img.naturalWidth,height:img.naturalHeight};}
+                catch(e){out.image={ok:false,name:e&&e.name,message:e&&e.message,stack:e&&e.stack};}
+                return out;
+              });
+              results.push({engine,direct,consoleMessages});
+            }finally{await browser.close();}
+          }
+          (async()=>{await run(chromium,'chromium');await run(webkit,'webkit');fs.writeFileSync('QR_DIAGNOSTIC.json',JSON.stringify({checked_at:new Date().toISOString(),results},null,2)+'\n');})().catch(e=>{fs.writeFileSync('QR_DIAGNOSTIC.json',JSON.stringify({fatal:String(e&&e.stack||e)},null,2)+'\n');process.exitCode=1});
+          NODE
+          node diagnose-qr.cjs
+      - name: Commit diagnostics
+        if: always()
+        run: |
+          rm -f diagnose-qr.cjs package.json package-lock.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add QR_DIAGNOSTIC.json
+          git commit -m 'test: record MineReady QR decoder diagnostics' || true
+          git push origin HEAD:camera-training-v11-2-clean
