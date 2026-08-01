@@ -1,8 +1,33 @@
 {
   "release": "11.2.0",
-  "status": "failure",
-  "checked_at": "2026-08-01T19:22:48.989Z",
+  "status": "success",
+  "checked_at": "2026-08-01T19:25:02.474Z",
   "url": "https://mineready.zerodaycyber.io/",
-  "error": "locator.click: Error: strict mode violation: locator('[data-action=\"modal-close\"]') resolved to 2 elements:\n    1) <button class=\"close\" aria-label=\"Close\" data-action=\"modal-close\">×</button> aka getByRole('button', { name: 'Close' })\n    2) <button class=\"btn\" data-action=\"modal-close\">Cancel</button> aka getByRole('button', { name: 'Cancel' })\n\nCall log:\n  - waiting for locator('[data-action=\"modal-close\"]')\n\n    at browserFlow (/home/runner/work/zeroday-mineready/zeroday-mineready/live-qa.cjs:23:55)\n    at async /home/runner/work/zeroday-mineready/zeroday-mineready/live-qa.cjs:59:3",
-  "results": []
+  "results": [
+    {
+      "test": "live_selectable_training_and_qr_photo",
+      "engine": "chromium",
+      "choices": 10,
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "test": "live_selectable_training_and_qr_photo",
+      "engine": "webkit",
+      "choices": 10,
+      "overflow": 0,
+      "passed": true
+    },
+    {
+      "test": "live_https_camera_permission_stream",
+      "engine": "chromium",
+      "state": {
+        "secure": true,
+        "media": true,
+        "stream": true,
+        "status": "Requesting camera access…"
+      },
+      "passed": true
+    }
+  ]
 }
