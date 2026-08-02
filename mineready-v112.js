@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-var RELEASE='11.4.0';
+var RELEASE='11.4.1';
 var pendingTemplate='';
 var pendingWorker='';
 var scanner=null;

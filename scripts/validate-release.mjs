@@ -8,7 +8,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 
-const version = '11.4.0';
+const version = '11.4.1';
 const html = read('index.html');
 const core = read('mineready-v111.js');
 const enhancements = read('mineready-v112.js');

@@ -1,7 +1,7 @@
 (function(){
 'use strict';
-var VERSION='11.4.0';
-var STORE='mineready-v114-state';
+var VERSION='11.4.1';
+var STORE='mineready-v1141-state';
 var SITE_ID='silver-ridge-quarry';
 var SITE_NOTICE_VERSION=4;
 var PLAN_VERSION='2026.3';
