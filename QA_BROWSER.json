@@ -1,7 +1,7 @@
 {
   "release": "11.5.0",
   "status": "success",
-  "checked_at": "2026-08-02T22:24:46Z",
+  "checked_at": "2026-08-02T22:34:01Z",
   "browser": "Codex in-app browser",
   "results": [
     {"test":"layout_320","viewport":{"width":320,"height":800},"horizontal_overflow":false,"passed":true},
@@ -14,7 +14,8 @@
     {"test":"single_worker_intake","worker":"ZMR-1121","name":"Jordan Ellis","new_roster_total":25,"searchable":true,"passed":true},
     {"test":"carlos_orientation_remediation","worker_preselected":"ZMR-1042","template":"site-hazard-awareness","review_owner":"mine","bilingual_fields":true,"passed":true},
     {"test":"accessibility_basics","duplicate_ids":0,"unnamed_buttons":0,"unlabelled_controls":0,"images_missing_alt":0,"passed":true},
-    {"test":"runtime_console","errors":0,"external_runtime_dependencies":0,"passed":true}
+    {"test":"runtime_console","errors":0,"external_runtime_dependencies":0,"passed":true},
+    {"test":"production_live","url":"https://mineready.zerodaycyber.io","version":"11.5.0","github_quality":"success","github_pages":"success","passed":true}
   ],
   "failures": []
 }

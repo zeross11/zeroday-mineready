@@ -11,8 +11,8 @@
   "single_worker_intake": "success",
   "context_aware_readiness": "success",
   "security_review": "success",
-  "checked_at": "2026-08-02T22:24:46Z",
-  "deployment_tested": false,
+  "checked_at": "2026-08-02T22:34:01Z",
+  "deployment_tested": true,
   "live_url": "https://mineready.zerodaycyber.io",
-  "live_version": null
+  "live_version": "11.5.0"
 }
