@@ -10,5 +10,7 @@
   "dynamic_qr": "success",
   "security_review": "success",
   "checked_at": "2026-08-02T21:31:38Z",
-  "deployment_tested": false
+  "deployment_tested": true,
+  "live_url": "https://mineready.zerodaycyber.io",
+  "live_version": "11.4.1"
 }
