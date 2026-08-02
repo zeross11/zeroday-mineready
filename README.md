@@ -4,7 +4,16 @@ Mobile-first English/Spanish contractor-readiness, Part 46 training, mine-approv
 
 **Live demo:** `https://mineready.zerodaycyber.io`
 
-## Release 11.3.0 — client demo reliability and usability
+## Release 11.4.0 — context-aware gate workflow
+
+- Every worker readiness check is now a semantic, keyboard-accessible action
+- Missing training opens the assignment form in place with the worker, plan-mapped course, review owner, milestones, bilingual content, and due date prefilled
+- Completed checks open concise evidence dialogs instead of leaving operators to infer what the green status means
+- Identity, annual-record, approval, restriction, and hold exceptions explain the cause and responsible owner in context
+- Eligible mine approval and access-hold removal can be completed directly from the readiness dialog
+- English and Spanish gate flows use the same context-aware behavior without menu switching
+
+### Included 11.3 capabilities
 
 - Role-guided Mine Safety, Employer Admin, and Worker walkthroughs with a clearer “View as” control
 - Bilingual English/Spanish assignment titles and detailed subjects, with predictable English fallback for custom training
@@ -41,7 +50,7 @@ Mobile-first English/Spanish contractor-readiness, Part 46 training, mine-approv
 
 ## Quality control
 
-The 11.3.0 release passed static release checks and browser verification at 320-pixel phone and 1440-pixel desktop widths. The browser walkthrough covered bilingual catalog assignment, Spanish worker completion, authorized certification, real QR generation for built-in and imported workers, accurate credited-minute totals, non-destructive reset-link handling, accessibility basics, and console errors. See `QA_STATUS.json`, `QA_BROWSER.json`, and `QA_REPORT.md`.
+The 11.4.0 release passed static release checks and targeted browser verification at 320-pixel phone and 1280-pixel desktop widths. The walkthrough covered all seven readiness actions, Carlos Martinez’s preselected site-orientation assignment, bilingual content, completed-evidence dialogs, blocked-program explanation, direct mine approval, direct hold removal, accessibility basics, responsive layout, and console errors. Earlier QR, certification, credited-minute, import, and reset-safety checks remain covered in the same QA artifacts. See `QA_STATUS.json`, `QA_BROWSER.json`, and `QA_REPORT.md`.
 
 ## Deployment
 

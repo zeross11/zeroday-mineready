@@ -1,12 +1,14 @@
 {
-  "release": "11.3.0",
+  "release": "11.4.0",
   "status": "success",
   "static": "success",
   "browser": "success",
   "responsive": "success",
   "bilingual_workflow": "success",
+  "context_aware_readiness": "success",
+  "prefilled_remediation": "success",
   "dynamic_qr": "success",
   "security_review": "success",
-  "checked_at": "2026-08-02T20:30:12Z",
+  "checked_at": "2026-08-02T21:31:38Z",
   "deployment_tested": false
 }

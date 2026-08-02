@@ -8,7 +8,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 
-const version = '11.3.0';
+const version = '11.4.0';
 const html = read('index.html');
 const core = read('mineready-v111.js');
 const enhancements = read('mineready-v112.js');
@@ -24,6 +24,9 @@ assert(!core.includes('function fakeQr'), 'decorative QR fallback must not be us
 assert(core.includes('annualCreditedMinutes!=null'), 'annual ledger must use certified credited minutes');
 assert(core.includes("titleEs=clean($('#asTitleEs')"), 'assignment translations are missing');
 assert(core.includes("subjectEs=clean($('#asSubjectEs')"), 'assignment subject translations are missing');
+assert(core.includes('data-readiness='), 'context-aware readiness evidence actions are missing');
+assert(core.includes('data-mr-template='), 'context-aware training remediation actions are missing');
+assert(enhancements.includes('pendingWorker'), 'readiness assignments must preserve the selected worker');
 assert(!html.includes('serviceWorker.register'), 'application shell service worker must remain disabled');
 assert(!existsSync(resolve(root, 'service-worker.js')), 'retired service worker source must not be published');
 assert(!existsSync(resolve(root, 'app.js')), 'legacy application source must not be published');

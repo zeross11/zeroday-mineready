@@ -3,4 +3,5 @@
 @media(min-width:520px){.mr-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mr-scanner{align-items:center;padding:18px}.mr-scanner-card{max-width:560px;max-height:calc(100dvh - 36px);border-radius:24px}.mr-video-wrap{aspect-ratio:4/3;max-height:62vh}.mr-scanner-actions{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:900px){.mr-course-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.mr-course-card{min-height:145px}}
 @media(max-width:380px){.mr-scanner-card{padding-left:12px;padding-right:12px}.mr-scanner-actions{grid-template-columns:1fr}.mr-template-tools .btn{flex:1}.mr-template-tools .meta{width:100%;margin-left:0}.mr-course-card{min-height:116px}}
+.mr-assignment-context{grid-column:1/-1;display:grid;gap:4px;padding:12px 13px;border:1px solid #52772d;border-radius:13px;background:#17220f}.mr-assignment-context strong{color:var(--lime);font-size:12px;text-transform:uppercase;letter-spacing:.05em}.mr-assignment-context span{color:#dce7d5;font-size:13px;line-height:1.4}
 @media(prefers-reduced-motion:reduce){.mr-course-card{transition:none}}
