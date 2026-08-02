@@ -1,11 +1,15 @@
 {
-  "release": "11.5.0",
+  "release": "11.6.0",
   "status": "success",
-  "checked_at": "2026-08-02T22:34:01Z",
+  "checked_at": "2026-08-02T23:19:10Z",
   "browser": "Codex in-app browser",
   "results": [
     {"test":"layout_320","viewport":{"width":320,"height":800},"horizontal_overflow":false,"passed":true},
     {"test":"layout_1280","viewport":{"width":1280,"height":720},"horizontal_overflow":false,"desktop_navigation":true,"passed":true},
+    {"test":"first_visit_welcome","forced_url":"?tour=1","welcome_visible":true,"fictional_data_disclosure":true,"explore_action":true,"tour_action":true,"passed":true},
+    {"test":"guided_product_tour","steps":4,"routes":["mine_dashboard","mine_people","mine_gate_carlos","employer_people"],"completed":true,"passed":true},
+    {"test":"returning_visitor_entry","welcome_repeated":false,"demo_guide_available":true,"passed":true},
+    {"test":"bilingual_onboarding","english":true,"spanish":true,"passed":true},
     {"test":"populated_roster","seeded_workers":24,"clear":10,"restricted":2,"action_required":12,"on_site":4,"passed":true},
     {"test":"local_worker_portraits","portraits":24,"loaded":24,"remote_image_dependencies":0,"passed":true},
     {"test":"roster_search","query":"WO-4862","matched_worker":"Mei Chen","visible_results":1,"passed":true},
@@ -15,7 +19,7 @@
     {"test":"carlos_orientation_remediation","worker_preselected":"ZMR-1042","template":"site-hazard-awareness","review_owner":"mine","bilingual_fields":true,"passed":true},
     {"test":"accessibility_basics","duplicate_ids":0,"unnamed_buttons":0,"unlabelled_controls":0,"images_missing_alt":0,"passed":true},
     {"test":"runtime_console","errors":0,"external_runtime_dependencies":0,"passed":true},
-    {"test":"production_live","url":"https://mineready.zerodaycyber.io","version":"11.5.0","github_quality":"success","github_pages":"success","passed":true}
+    {"test":"production_live","url":"https://mineready.zerodaycyber.io","version":"11.6.0","welcome":true,"guided_steps":4,"github_quality":"success","github_pages":"success","passed":true}
   ],
   "failures": []
 }
