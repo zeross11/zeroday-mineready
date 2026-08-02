@@ -1,68 +1,119 @@
 # Zeroday MineReady
 
-Mobile-first English/Spanish contractor-readiness, Part 46 training, mine-approval, and gate-verification demonstration for aggregate and mining sites.
+[![MineReady quality checks](https://github.com/zeross11/zeroday-mineready/actions/workflows/qa.yml/badge.svg)](https://github.com/zeross11/zeroday-mineready/actions/workflows/qa.yml)
 
-**Live demo:** `https://mineready.zerodaycyber.io`
+MineReady is a mobile-first, English/Spanish demonstration of contractor readiness, Part 46 training workflows, mine approval, and gate check-in/check-out for aggregate and mining operations.
 
-## Release 11.5.0 — populated workforce demo
+**Live demo:** [mineready.zerodaycyber.io](https://mineready.zerodaycyber.io)
 
-- 24-worker fictional roster showing clear, restricted, pending, expired, and on-site populations
-- Local generated worker portraits for every built-in profile, with no remote image dependency or personal data
-- Working roster search across name, ID, employer, role, crew, work order, and program
-- Fast Gate search that opens the selected worker without scrolling through the roster
-- Standard Employer Admin form for adding one worker at a time, alongside CSV import
-- New workers start with explicit identity, training, orientation, notice, and approval actions
+> This is a fictional, browser-local product demonstration. It is not an authoritative training record, approved curriculum, legal certification service, identity system, or production access-control system. Do not enter real worker or mine data.
 
-### Included 11.4 capabilities
+## What the demo shows
 
-- Every worker readiness check is now a semantic, keyboard-accessible action
-- Missing training opens the assignment form in place with the worker, plan-mapped course, review owner, milestones, bilingual content, and due date prefilled
-- Completed checks open concise evidence dialogs instead of leaving operators to infer what the green status means
-- Identity, annual-record, approval, restriction, and hold exceptions explain the cause and responsible owner in context
-- Eligible mine approval and access-hold removal can be completed directly from the readiness dialog
-- English and Spanish gate flows use the same context-aware behavior without menu switching
+- A 24-worker fictional roster with clear, restricted, expired, pending, action-required, and on-site examples
+- Local fictional worker portraits with no remote image or personal-data dependency
+- Search by worker name, ID, employer, role, crew, work order, or training program
+- Mine Safety, Employer Admin, and Worker views with English/Spanish switching
+- Context-aware readiness checks that explain the status and open the appropriate next action
+- Prefilled site-orientation and training assignments without forcing users through unrelated menus
+- One-at-a-time worker entry and CSV roster intake
+- Part 46-oriented program, task-training, annual-refresher, review, and credited-time demonstrations
+- QR pass generation, camera/photo scanning where supported, and manual roster lookup
+- Assignment-specific mine approval, holds, check-in, and check-out
 
-### Included 11.3 capabilities
+## Recommended prospect walkthrough
 
-- Role-guided Mine Safety, Employer Admin, and Worker walkthroughs with a clearer “View as” control
-- Bilingual English/Spanish assignment titles and detailed subjects, with predictable English fallback for custom training
-- Standards-compliant QR generation for every roster worker, including workers imported by CSV
-- Explicit separation of actual training time from authorized §46.8 credited minutes
-- Confirmed reset behavior; only `?reset=1` can request a reset, and it prompts before clearing browser-local data
-- Accessible modal focus management, current-page navigation state, status announcements, responsive five-card summary, and improved small-screen controls
-- Read-only GitHub quality workflow; obsolete branch-rewriting deployment automation removed
-- Locally vendored and pinned QR encoder and decoder with no runtime CDN dependency
-- Legacy application copies, deployment fragments, and retired service-worker source removed
+Use the [five-minute demo guide](DEMO_GUIDE.md) for a repeatable presentation. The strongest path is:
 
-### Included 11.2 capabilities
+1. Open **Mine Safety → Today** to show the populated readiness picture.
+2. Open **People** and search for `Carlos Martinez` or `WO-4821`.
+3. Open Carlos at **Gate**, then select **Site orientation current** to show the prefilled remediation flow.
+4. Search for `Mei Chen` at Gate to show a worker who is clear for the assignment.
+5. Switch to **Employer Admin → People → Add one worker** to show direct roster intake.
 
-- Selectable mine and employer training catalogs instead of an empty assignment form
-- Plan-mapped templates for §46.5, §46.6, §46.7, §46.8, and §46.11
-- Three operational categories: Changes at the Mine, Incident Prevention, and Incident Response
-- Templates populate program, category, milestone, minutes, title, detailed subject, review owner, and requested annual credit
-- Single-worker, multi-worker, select-all, and custom-training assignment flows
-- Mobile worker lesson, knowledge check, acknowledgment, authorized review, and certification
-- Live rear-camera QR scanning after an explicit user action
-- Switch-camera and supported-device flashlight controls
-- Phone-photo QR decoding and manual roster lookup as independent fallbacks
-- Standards-style black-on-white worker QR passes linked to the custom-domain gate view
-- Locally vendored and pinned QR decoder; no runtime CDN dependency
-- §46.5 new-miner milestones: before-work progress, 60-day items, 24 total hours, 90-day deadline, and experienced-miner observation restriction
-- §46.6 newly hired experienced-miner workflow: experience verification, before-work subjects, and applicable 60-day respiratory/self-rescue item
-- §46.8 rolling annual-refresher ledger: certified short sessions accumulate toward eight hours
-- Explicit primary program and optional additional §46.8 credit; no silent double counting
-- Worker completion moves to authorized review; it does not self-certify training
-- Assignment-specific mine approval and check-in
-- Responsive phone, iPad, and desktop layouts
-- Safe CSV import/export and spreadsheet-formula protection
-- No active application-shell service worker; legacy MineReady caches are retired at startup
+Use **Reset demo** before a presentation when you want the original fictional state.
 
-## Quality control
+## Workspaces
 
-The 11.5.0 release passed static release checks and targeted browser verification at 320-pixel phone and 1280-pixel desktop widths. The walkthrough covered the populated 24-worker roster, local worker portraits, People and Gate search, one-at-a-time employer intake, all seven readiness actions, Carlos Martinez’s preselected site-orientation assignment, accessibility basics, responsive layout, and console errors. Earlier QR, certification, credited-minute, import, and reset-safety checks remain covered in the same QA artifacts. See `QA_STATUS.json`, `QA_BROWSER.json`, and `QA_REPORT.md`.
+| Workspace | Demonstrates |
+| --- | --- |
+| Mine Safety | Site readiness, exceptions, authorized review, approval, holds, and gate decisions |
+| Employer Admin | Worker intake, training assignment, completion progress, and employer-owned actions |
+| Worker | Mobile training, knowledge checks, acknowledgment, progress, and QR pass presentation |
 
-## Deployment
+Workspace selection changes the demonstration perspective; it is not authentication or server-enforced authorization.
 
-GitHub Pages publishes the `gh-pages` branch from `/(root)`. The custom domain is `mineready.zerodaycyber.io`, with DNS `mineready CNAME zeross11.github.io`.
+## Run locally
 
-This public demonstration uses fictional data stored locally in each browser. It is not an authoritative production system, approved training curriculum, legal certification service, or live access-control system.
+No build step or package installation is required. Serve the repository root with any static HTTP server; opening the files directly with `file://` is not supported reliably by browser security controls.
+
+```powershell
+python -m http.server 4174 --bind 127.0.0.1
+```
+
+Then open `http://127.0.0.1:4174/`.
+
+Run the release checks with Node.js 22 or newer:
+
+```powershell
+node scripts/validate-release.mjs
+node --check mineready-v111.js
+node --check mineready-v112.js
+node --check vendor/mr-pass-code.js
+```
+
+## Data and privacy
+
+- Built-in names, companies, work orders, training records, QR identifiers, and portraits are fictional.
+- Demo changes are stored in the current browser's local storage and are not synchronized.
+- The static site has no account database, analytics SDK, server API, or remote runtime dependency.
+- Clearing site data or using **Reset demo** removes browser-local changes.
+- Worker QR codes identify fictional demo records; they are not credentials or proof of authorization.
+
+## Technical profile
+
+- Static HTML, CSS, and JavaScript deployed through GitHub Pages
+- No build pipeline, package manager, backend, service worker, or production identity provider
+- Locally vendored QR generation and decoding libraries with license notices
+- Cache-busted release assets and a restrictive browser content-security policy
+- Read-only GitHub Actions validation on `main`
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for trust boundaries and design details.
+
+## Repository map
+
+| Path | Purpose |
+| --- | --- |
+| `index.html` | Application shell, security policy, and release asset loading |
+| `mineready-v111.js` | Core fictional data and MineReady workflows |
+| `mineready-v112.js` | Training, QR scanning, and camera enhancements |
+| `mineready-v111.css`, `mineready-v112.css` | Responsive application styling |
+| `assets/workers/` | Local fictional worker portraits |
+| `vendor/` | Pinned QR libraries and their license notices |
+| `scripts/validate-release.mjs` | Release-integrity and public-repository checks |
+| `QA_*.json`, `QA_REPORT.md` | Latest recorded static, browser, and production QA evidence |
+
+## Documentation
+
+- [Demo guide](DEMO_GUIDE.md)
+- [Architecture and trust boundaries](ARCHITECTURE.md)
+- [Deployment and rollback](DEPLOYMENT.md)
+- [DNS setup](DNS_SETUP.md)
+- [Security policy](SECURITY.md)
+- [Support boundaries](SUPPORT.md)
+- [Contributing](CONTRIBUTING.md)
+- [Changelog](CHANGELOG.md)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
+- [QA report](QA_REPORT.md)
+
+## Release status
+
+Release **11.5.0** passed static release validation and targeted browser testing at 320×800 and 1280×720. The public custom domain was verified with the populated roster, local portraits, People and Gate search, one-worker intake, context-aware remediation, responsive layout, accessibility baseline, and zero runtime console errors. GitHub quality checks and Pages deployment completed successfully.
+
+## Production adaptation
+
+Before using this concept with real operational data, implement authenticated identities, server-enforced permissions, encrypted protected records, durable audit history, retention and deletion rules, approved training content, authoritative certification, incident response, monitoring, backup/recovery, and a documented mine operating process. A qualified mine-safety and legal review is required.
+
+## License
+
+Copyright (c) 2026 Zeroday Security Solutions LLC. This repository is public for viewing and evaluation but remains proprietary. See [LICENSE](LICENSE).

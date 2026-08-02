@@ -1,0 +1,63 @@
+name: Demo bug report
+description: Report a reproducible defect, accessibility problem, or documentation issue using fictional data only.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve MineReady. Do not include real worker, customer, mine, credential, medical, employment, training, or access-control data. Security concerns belong in a private report under SECURITY.md.
+  - type: input
+    id: release
+    attributes:
+      label: MineReady release
+      description: The version shown in the application release pill.
+      placeholder: 11.5.0
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser, operating system, and viewport
+      placeholder: Edge 138, Windows 11, 1280x720
+    validations:
+      required: true
+  - type: input
+    id: workspace
+    attributes:
+      label: Workspace and language
+      placeholder: Mine Safety, English
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Use fictional demo records only.
+      placeholder: |
+        1. Open People
+        2. Search for WO-4821
+        3. Select Open gate
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Data-safety confirmation
+      options:
+        - label: I confirm this report contains no real worker, customer, credential, mine, or operational data.
+          required: true
+        - label: I confirm this is not a vulnerability report.
+          required: true

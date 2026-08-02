@@ -1,9 +1,28 @@
-# Security
+# Security policy
 
-Do not enter real worker, credential, mine, training, or access-control data into this static demonstration. Data is stored only in the current browser's local storage and is not synchronized or authenticated.
+## Supported version
 
-Worker QR passes are identifiers for demonstrating the gate workflow, not credentials or proof of authorization. Workspace roles and approvals are client-side demo controls and must not be treated as production authorization.
+Security updates are applied to the current public demonstration release only. The supported release is **11.5.0**.
 
-This demo deliberately avoids production identity, server, audit-retention, and access-control overhead. A production deployment requires authenticated users, server-enforced permissions, protected records, audit logging, retention rules, and an approved operating process.
+## Safe-use boundary
 
-Report security concerns privately to Zeroday Cybersecurity. Do not include sensitive production data in a public GitHub issue.
+MineReady is a static, fictional demonstration. Do not enter real worker, credential, medical, mine, training, employment, or access-control data.
+
+- Browser-local records are not synchronized, authenticated, encrypted as application records, or retained as an authoritative audit trail.
+- Workspace roles and approvals are client-side demonstration controls, not security boundaries.
+- QR passes identify fictional roster entries; they are not credentials or proof of authorization.
+- Training completions, credited minutes, approvals, restrictions, and gate decisions are illustrative only.
+
+## Reporting a vulnerability
+
+Do not disclose a suspected vulnerability or sensitive data in a public issue.
+
+1. Prefer a [private GitHub security advisory](https://github.com/zeross11/zeroday-mineready/security/advisories/new).
+2. If private reporting is unavailable, contact Zeroday Security Solutions through the official contact channel at [zerodaycyber.io](https://zerodaycyber.io) and reference the `zeroday-mineready` repository.
+3. Include the affected release, browser, reproduction steps, impact, and a minimal proof of concept. Do not include real worker or customer data.
+
+We will acknowledge a valid report, assess severity, coordinate remediation, and publish an appropriate release note. Please allow reasonable time for remediation before public disclosure.
+
+## Requirements for production use
+
+A production adaptation requires authenticated users, server-enforced least privilege, protected records, secure session handling, durable audit logging, retention and deletion controls, monitoring, incident response, backup/recovery, dependency management, approved operating procedures, and regulatory/legal review. This repository intentionally does not claim to provide those controls.

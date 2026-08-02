@@ -1,3 +1,7 @@
-Copyright © 2026 Zeroday Security Solutions LLC. All rights reserved.
+Copyright (c) 2026 Zeroday Security Solutions LLC. All rights reserved.
 
-This repository and its contents are proprietary. No permission is granted to copy, modify, distribute, sublicense, sell, or use the software or associated materials except with prior written authorization from Zeroday Security Solutions LLC.
+This is proprietary, source-available demonstration software. Public access to this repository permits viewing and evaluation only.
+
+No permission is granted to copy, modify, distribute, sublicense, sell, host, operate, or use the software or associated materials for commercial, operational, training, certification, access-control, or derivative purposes without prior written authorization from Zeroday Security Solutions LLC.
+
+Third-party components remain subject to their respective licenses identified in THIRD_PARTY_NOTICES.md and the corresponding license files under vendor/.

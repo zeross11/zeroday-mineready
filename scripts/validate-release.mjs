@@ -40,6 +40,64 @@ assert(existsSync(resolve(root, 'vendor/qr-scanner-LICENSE')), 'QR scanner licen
 assert(existsSync(resolve(root, 'vendor/mr-pass-code.js')), 'Worker pass generator is missing');
 assert(existsSync(resolve(root, 'vendor/mr-gate-reader.min.js')), 'Gate reader is missing');
 
+const publicDocs = [
+  'README.md',
+  'ARCHITECTURE.md',
+  'CHANGELOG.md',
+  'CONTRIBUTING.md',
+  'DEMO_GUIDE.md',
+  'DEPLOYMENT.md',
+  'DNS_SETUP.md',
+  'SECURITY.md',
+  'SUPPORT.md',
+  'THIRD_PARTY_NOTICES.md',
+  'LICENSE'
+];
+for (const file of publicDocs) {
+  assert(existsSync(resolve(root, file)), `Required public documentation is missing: ${file}`);
+}
+
+const repositoryHygiene = [
+  '.editorconfig',
+  '.gitattributes',
+  '.gitignore',
+  '.github/ISSUE_TEMPLATE/bug_report.yml',
+  '.github/ISSUE_TEMPLATE/config.yml',
+  '.github/pull_request_template.md'
+];
+for (const file of repositoryHygiene) {
+  assert(existsSync(resolve(root, file)), `Required public repository file is missing: ${file}`);
+}
+
+const gitignore = read('.gitignore');
+for (const pattern of ['.env', 'node_modules/', 'dist/', 'coverage/', '*.log']) {
+  assert(gitignore.includes(pattern), `.gitignore must protect ${pattern}`);
+}
+
+const readme = read('README.md');
+for (const file of publicDocs.filter((file) => file !== 'README.md')) {
+  assert(readme.includes(`](${file})`), `README documentation link is missing: ${file}`);
+}
+assert(readme.includes(`Release **${version}**`), 'README release status is inconsistent');
+assert(read('404.html').includes(`release=${version}`), '404 redirect release is stale');
+assert(read('SECURITY.md').includes(`**${version}**`), 'Security supported version is stale');
+assert(read('SECURITY.md').includes('/security/advisories/new'), 'Private vulnerability reporting link is missing');
+
+const forbiddenArtifacts = [
+  '.env',
+  'node_modules',
+  'dist',
+  'build',
+  'coverage',
+  '.cache',
+  '.parcel-cache',
+  '.vite',
+  '__pycache__'
+];
+for (const artifact of forbiddenArtifacts) {
+  assert(!existsSync(resolve(root, artifact)), `Local or generated artifact must not be published: ${artifact}`);
+}
+
 const workflow = read('.github/workflows/qa.yml');
 assert(workflow.includes('contents: read'), 'quality workflow must use read-only repository permissions');
 assert(!/force|write-all|contents:\s*write/i.test(workflow), 'quality workflow must not rewrite repository content');
@@ -50,6 +108,15 @@ for (const match of html.matchAll(/(?:src|href)="(\.\/[^"?#]+)(?:[?#][^"]*)?"/g)
 
 for (const match of html.matchAll(/<(?:script|link)[^>]+(?:src|href)="([^"]+)"/g)) {
   assert(!/^https?:\/\//i.test(match[1]), `Runtime dependency must be local: ${match[1]}`);
+}
+
+for (const file of publicDocs.filter((file) => file.endsWith('.md'))) {
+  const markdown = read(file);
+  for (const match of markdown.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) {
+    const target = match[1].split('#')[0];
+    if (!target || /^(?:https?:|mailto:)/i.test(target)) continue;
+    assert(existsSync(resolve(root, target)), `Broken local documentation link in ${file}: ${target}`);
+  }
 }
 
 console.log(`MineReady ${version} release validation passed.`);

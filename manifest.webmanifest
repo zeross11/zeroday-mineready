@@ -1,7 +1,7 @@
 {
   "name": "Zeroday MineReady",
   "short_name": "MineReady",
-  "description": "Mobile contractor readiness, bilingual training, and gate verification demo",
+  "description": "Fictional mobile contractor readiness, bilingual Part 46 training workflow, and gate verification demonstration",
   "start_url": "./?workspace=mine&lang=en",
   "scope": "./",
   "display": "standalone",
