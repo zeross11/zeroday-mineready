@@ -4,7 +4,19 @@ Mobile-first English/Spanish contractor-readiness, Part 46 training, mine-approv
 
 **Live demo:** `https://mineready.zerodaycyber.io`
 
-## Release 11.2.0 — selectable training and QR gate scanning
+## Release 11.3.0 — client demo reliability and usability
+
+- Role-guided Mine Safety, Employer Admin, and Worker walkthroughs with a clearer “View as” control
+- Bilingual English/Spanish assignment titles and detailed subjects, with predictable English fallback for custom training
+- Standards-compliant QR generation for every roster worker, including workers imported by CSV
+- Explicit separation of actual training time from authorized §46.8 credited minutes
+- Confirmed reset behavior; only `?reset=1` can request a reset, and it prompts before clearing browser-local data
+- Accessible modal focus management, current-page navigation state, status announcements, responsive five-card summary, and improved small-screen controls
+- Read-only GitHub quality workflow; obsolete branch-rewriting deployment automation removed
+- Locally vendored and pinned QR encoder and decoder with no runtime CDN dependency
+- Legacy application copies, deployment fragments, and retired service-worker source removed
+
+### Included 11.2 capabilities
 
 - Selectable mine and employer training catalogs instead of an empty assignment form
 - Plan-mapped templates for §46.5, §46.6, §46.7, §46.8, and §46.11
@@ -29,7 +41,7 @@ Mobile-first English/Spanish contractor-readiness, Part 46 training, mine-approv
 
 ## Quality control
 
-The 11.2.0 release passed Chromium and WebKit tests at 320-pixel phone, standard phone, iPad, and desktop widths. The test matrix covered English and Spanish, training-catalog selection, assignment, phone completion, authorized certification, direct QR decoding, phone-photo scanning, roster selection, camera permission, and camera stream initialization. See `QA_STATUS.json`, `QA_BROWSER.json`, and `QA_REPORT.md`.
+The 11.3.0 release passed static release checks and browser verification at 320-pixel phone and 1440-pixel desktop widths. The browser walkthrough covered bilingual catalog assignment, Spanish worker completion, authorized certification, real QR generation for built-in and imported workers, accurate credited-minute totals, non-destructive reset-link handling, accessibility basics, and console errors. See `QA_STATUS.json`, `QA_BROWSER.json`, and `QA_REPORT.md`.
 
 ## Deployment
 

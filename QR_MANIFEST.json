@@ -2,10 +2,6 @@
   "format": "black-on-white",
   "error_correction": "Q",
   "payload": "custom-domain worker URL",
-  "workers": [
-    "ZMR-1042",
-    "ZMR-1049",
-    "ZMR-1056",
-    "ZMR-1088"
-  ]
+  "generation": "client-side for every roster worker",
+  "fallback_assets": ["ZMR-1042", "ZMR-1049", "ZMR-1056", "ZMR-1088"]
 }

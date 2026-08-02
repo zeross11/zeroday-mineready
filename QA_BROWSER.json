@@ -1,133 +1,19 @@
 {
-  "release": "11.2.0",
+  "release": "11.3.0",
   "status": "success",
-  "checked_at": "2026-08-01T19:13:48.247Z",
+  "checked_at": "2026-08-02T20:30:12Z",
+  "browser": "Codex in-app browser",
   "results": [
-    {
-      "test": "responsive_bilingual_catalog",
-      "engine": "chromium",
-      "viewport": {
-        "width": 320,
-        "height": 568
-      },
-      "overflow": 0,
-      "passed": true
-    },
-    {
-      "test": "layout_320",
-      "passed": true
-    },
-    {
-      "test": "responsive_bilingual_catalog",
-      "engine": "chromium",
-      "viewport": {
-        "width": 390,
-        "height": 844
-      },
-      "overflow": 0,
-      "passed": true
-    },
-    {
-      "test": "layout_390",
-      "passed": true
-    },
-    {
-      "test": "responsive_bilingual_catalog",
-      "engine": "chromium",
-      "viewport": {
-        "width": 820,
-        "height": 1180
-      },
-      "overflow": 0,
-      "passed": true
-    },
-    {
-      "test": "layout_ipad",
-      "passed": true
-    },
-    {
-      "test": "responsive_bilingual_catalog",
-      "engine": "chromium",
-      "viewport": {
-        "width": 1440,
-        "height": 1000
-      },
-      "overflow": 0,
-      "passed": true
-    },
-    {
-      "test": "layout_desktop",
-      "passed": true
-    },
-    {
-      "test": "responsive_bilingual_catalog",
-      "engine": "webkit",
-      "viewport": {
-        "width": 390,
-        "height": 844
-      },
-      "overflow": 0,
-      "passed": true
-    },
-    {
-      "test": "layout_webkit",
-      "passed": true
-    },
-    {
-      "test": "catalog_assign_complete_certify",
-      "engine": "chromium",
-      "catalog_cards": 10,
-      "passed": true
-    },
-    {
-      "test": "training_chromium",
-      "passed": true
-    },
-    {
-      "test": "catalog_assign_complete_certify",
-      "engine": "webkit",
-      "catalog_cards": 10,
-      "passed": true
-    },
-    {
-      "test": "training_webkit",
-      "passed": true
-    },
-    {
-      "test": "qr_decode_photo_roster",
-      "engine": "chromium",
-      "payload": "https://mineready.zerodaycyber.io/?workspace=mine&worker=ZMR-1042&lang=en",
-      "passed": true
-    },
-    {
-      "test": "qr_chromium",
-      "passed": true
-    },
-    {
-      "test": "qr_decode_photo_roster",
-      "engine": "webkit",
-      "payload": "https://mineready.zerodaycyber.io/?workspace=mine&worker=ZMR-1042&lang=en",
-      "passed": true
-    },
-    {
-      "test": "qr_webkit",
-      "passed": true
-    },
-    {
-      "test": "camera_permission_stream",
-      "engine": "chromium",
-      "state": {
-        "secure": true,
-        "media": true,
-        "stream": true,
-        "status": "Requesting camera access…"
-      },
-      "passed": true
-    },
-    {
-      "test": "camera",
-      "passed": true
-    }
+    {"test":"layout_320","viewport":{"width":320,"height":800},"horizontal_overflow":false,"passed":true},
+    {"test":"layout_1440","viewport":{"width":1440,"height":900},"horizontal_overflow":false,"five_column_summary":true,"passed":true},
+    {"test":"bilingual_catalog_fields","english_and_spanish_title":true,"english_and_spanish_subject":true,"passed":true},
+    {"test":"assign_complete_certify","worker_language":"es","authorized_review_owner":"mine","passed":true},
+    {"test":"dynamic_qr_existing_worker","generated_svg":true,"decorative_qr":false,"passed":true},
+    {"test":"dynamic_qr_imported_worker","worker":"ZMR-2001","generated_svg":true,"decorative_qr":false,"passed":true},
+    {"test":"credited_minutes","actual_minutes":50,"credited_minutes":45,"annual_total_minutes":395,"passed":true},
+    {"test":"non_exact_reset_parameter","parameter":"preview","data_preserved":true,"dialog":false,"passed":true},
+    {"test":"accessibility_basics","duplicate_ids":0,"unnamed_buttons":0,"unlabelled_controls":0,"images_missing_alt":0,"active_navigation_current":true,"passed":true},
+    {"test":"runtime_console","errors":0,"external_runtime_dependencies":0,"passed":true}
   ],
   "failures": []
 }

@@ -1,1 +1,12 @@
-{"release":"11.2.0","status":"success","qr_build":"success","static":"success","install":"success","browser":"success","checked_at":"2026-08-01T19:13:48Z","workflow_run":"https://github.com/zeross11/zeroday-mineready/actions/runs/30714268937"}
+{
+  "release": "11.3.0",
+  "status": "success",
+  "static": "success",
+  "browser": "success",
+  "responsive": "success",
+  "bilingual_workflow": "success",
+  "dynamic_qr": "success",
+  "security_review": "success",
+  "checked_at": "2026-08-02T20:30:12Z",
+  "deployment_tested": false
+}

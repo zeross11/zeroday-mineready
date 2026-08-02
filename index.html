@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-app-version="11.2.0">
+<html lang="en" data-app-version="11.3.0">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -13,15 +13,16 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; media-src 'self' blob:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'">
   <meta name="description" content="MineReady mobile Part 46 training ledger, selectable training, workforce readiness, QR scanning, and gate verification demonstration">
   <title>Zeroday MineReady</title>
-  <link rel="icon" href="./assets/icon.svg?v=11.2.0" type="image/svg+xml">
-  <link rel="stylesheet" href="./mineready-v111.css?v=11.2.0">
-  <link rel="stylesheet" href="./mineready-v112.css?v=11.2.0">
+  <link rel="icon" href="./assets/icon.svg?v=11.3.0" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest?v=11.3.0">
+  <link rel="stylesheet" href="./mineready-v111.css?v=11.3.0">
+  <link rel="stylesheet" href="./mineready-v112.css?v=11.3.0">
 </head>
 <body>
   <div id="app">
     <main class="boot" role="status" aria-live="polite">
       <div>
-        <img src="./assets/icon.svg?v=11.2.0" alt="Zeroday">
+        <img src="./assets/icon.svg?v=11.3.0" alt="Zeroday">
         <h1>Zeroday MineReady</h1>
         <p>Opening the Part 46 mine-safety workspace…</p>
         <a href="?reset=1">Reset local demo data</a>
@@ -29,11 +30,11 @@
       </div>
     </main>
   </div>
-  <div id="modal" class="modal" hidden><div class="modal-card"><button class="close" data-action="modal-close" aria-label="Close">×</button><div id="modalBody"></div></div></div>
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden><div class="modal-card"><button class="close" data-action="modal-close" aria-label="Close">×</button><div id="modalBody"></div></div></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script>
     (function(){
-      function fail(message){var app=document.getElementById('app');if(!app||app.querySelector('.app'))return;app.innerHTML='<main class="boot" role="alert"><div><img src="./assets/icon.svg?v=11.2.0" alt="Zeroday"><h1>MineReady could not start</h1><p>'+String(message||'Application file did not load').replace(/[<>]/g,'')+'</p><a href="?reset=1">Reset demo and reload</a></div></main>';}
+      function fail(message){var app=document.getElementById('app');if(!app||app.querySelector('.app'))return;app.innerHTML='<main class="boot" role="alert"><div><img src="./assets/icon.svg?v=11.3.0" alt="Zeroday"><h1>MineReady could not start</h1><p>'+String(message||'Application file did not load').replace(/[<>]/g,'')+'</p><a href="?reset=1">Reset demo and reload</a></div></main>';}
       window.MR_START_FAIL=fail;
       window.addEventListener('error',function(event){fail(event&&event.message);});
       window.addEventListener('unhandledrejection',function(){fail('Application startup error');});
@@ -41,9 +42,10 @@
       window.setTimeout(function(){if(!document.querySelector('.app'))fail('Startup timed out.');},8000);
     })();
   </script>
-  <script src="./mineready-v111.js?v=11.2.0" onerror="MR_START_FAIL('MineReady application file did not load')"></script>
+  <script src="./vendor/qrcode-generator.js?v=2.0.4" onerror="console.warn('QR generator did not load; predefined passes remain available')"></script>
+  <script src="./mineready-v111.js?v=11.3.0" onerror="MR_START_FAIL('MineReady application file did not load')"></script>
   <script src="./vendor/qr-scanner.legacy.min.js?v=1.4.2" onerror="console.warn('QR scanner library did not load; photo and camera decoding will be unavailable')"></script>
-  <script src="./mineready-v112.js?v=11.2.0" onerror="console.warn('MineReady camera and training enhancements did not load')"></script>
-  <script>(function(){function setRelease(){var p=document.querySelector('.demo-pill');if(p&&p.textContent!=='v11.2.0')p.textContent='v11.2.0';}setRelease();new MutationObserver(setRelease).observe(document.getElementById('app'),{childList:true,subtree:true});})();</script>
+  <script src="./mineready-v112.js?v=11.3.0" onerror="console.warn('MineReady camera and training enhancements did not load')"></script>
+  <script>(function(){function setRelease(){var p=document.querySelector('.demo-pill');if(p&&p.textContent!=='v11.3.0')p.textContent='v11.3.0';}setRelease();new MutationObserver(setRelease).observe(document.getElementById('app'),{childList:true,subtree:true});})();</script>
 </body>
 </html>
