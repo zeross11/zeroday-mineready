@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -8,7 +8,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 
-const version = '11.4.1';
+const version = '11.5.0';
 const html = read('index.html');
 const core = read('mineready-v111.js');
 const enhancements = read('mineready-v112.js');
@@ -27,6 +27,11 @@ assert(core.includes("subjectEs=clean($('#asSubjectEs')"), 'assignment subject t
 assert(core.includes('data-readiness='), 'context-aware readiness evidence actions are missing');
 assert(core.includes('data-mr-template='), 'context-aware training remediation actions are missing');
 assert(enhancements.includes('pendingWorker'), 'readiness assignments must preserve the selected worker');
+assert(core.includes("seedWorker('ZMR-1120'"), 'populated 24-worker demonstration roster is missing');
+assert(core.includes("data-action=\"worker-add-open\""), 'single-worker intake action is missing');
+assert(core.includes('function filterPeople'), 'roster search implementation is missing');
+assert(core.includes('function filterGateRoster'), 'gate roster search implementation is missing');
+assert(readdirSync(resolve(root, 'assets/workers')).filter((name) => name.endsWith('.webp')).length === 24, '24 local worker portraits are required');
 assert(!html.includes('serviceWorker.register'), 'application shell service worker must remain disabled');
 assert(!existsSync(resolve(root, 'service-worker.js')), 'retired service worker source must not be published');
 assert(!existsSync(resolve(root, 'app.js')), 'legacy application source must not be published');

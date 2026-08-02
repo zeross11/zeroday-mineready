@@ -4,7 +4,16 @@ Mobile-first English/Spanish contractor-readiness, Part 46 training, mine-approv
 
 **Live demo:** `https://mineready.zerodaycyber.io`
 
-## Release 11.4.1 — context-aware gate workflow
+## Release 11.5.0 — populated workforce demo
+
+- 24-worker fictional roster showing clear, restricted, pending, expired, and on-site populations
+- Local generated worker portraits for every built-in profile, with no remote image dependency or personal data
+- Working roster search across name, ID, employer, role, crew, work order, and program
+- Fast Gate search that opens the selected worker without scrolling through the roster
+- Standard Employer Admin form for adding one worker at a time, alongside CSV import
+- New workers start with explicit identity, training, orientation, notice, and approval actions
+
+### Included 11.4 capabilities
 
 - Every worker readiness check is now a semantic, keyboard-accessible action
 - Missing training opens the assignment form in place with the worker, plan-mapped course, review owner, milestones, bilingual content, and due date prefilled
@@ -50,7 +59,7 @@ Mobile-first English/Spanish contractor-readiness, Part 46 training, mine-approv
 
 ## Quality control
 
-The 11.4.1 release passed static release checks and targeted browser verification at 320-pixel phone and 1280-pixel desktop widths. The walkthrough covered all seven readiness actions, Carlos Martinez’s preselected site-orientation assignment, bilingual content, completed-evidence dialogs, blocked-program explanation, direct mine approval, direct hold removal, accessibility basics, responsive layout, and console errors. Earlier QR, certification, credited-minute, import, and reset-safety checks remain covered in the same QA artifacts. See `QA_STATUS.json`, `QA_BROWSER.json`, and `QA_REPORT.md`.
+The 11.5.0 release passed static release checks and targeted browser verification at 320-pixel phone and 1280-pixel desktop widths. The walkthrough covered the populated 24-worker roster, local worker portraits, People and Gate search, one-at-a-time employer intake, all seven readiness actions, Carlos Martinez’s preselected site-orientation assignment, accessibility basics, responsive layout, and console errors. Earlier QR, certification, credited-minute, import, and reset-safety checks remain covered in the same QA artifacts. See `QA_STATUS.json`, `QA_BROWSER.json`, and `QA_REPORT.md`.
 
 ## Deployment
 
