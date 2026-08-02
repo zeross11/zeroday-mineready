@@ -24,4 +24,4 @@ jobs:
         run: |
           node --check mineready-v111.js
           node --check mineready-v112.js
-          node --check vendor/qrcode-generator.js
+          node --check vendor/mr-pass-code.js

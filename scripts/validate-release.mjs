@@ -19,7 +19,7 @@ assert(core.includes(`VERSION='${version}'`), 'core version is inconsistent');
 assert(enhancements.includes(`RELEASE='${version}'`), 'enhancement version is inconsistent');
 assert(health.version === version, 'health.json version is inconsistent');
 assert(html.includes('rel="manifest"'), 'web app manifest is not linked');
-assert(html.indexOf('qrcode-generator.js') < html.indexOf('mineready-v111.js'), 'QR generator must load before the app');
+assert(html.indexOf('mr-pass-code.js') < html.indexOf('mineready-v111.js'), 'Worker pass generator must load before the app');
 assert(!core.includes('function fakeQr'), 'decorative QR fallback must not be used');
 assert(core.includes('annualCreditedMinutes!=null'), 'annual ledger must use certified credited minutes');
 assert(core.includes("titleEs=clean($('#asTitleEs')"), 'assignment translations are missing');
@@ -29,6 +29,8 @@ assert(!existsSync(resolve(root, 'service-worker.js')), 'retired service worker 
 assert(!existsSync(resolve(root, 'app.js')), 'legacy application source must not be published');
 assert(existsSync(resolve(root, 'vendor/qrcode-generator-LICENSE')), 'QR generator license notice is missing');
 assert(existsSync(resolve(root, 'vendor/qr-scanner-LICENSE')), 'QR scanner license notice is missing');
+assert(existsSync(resolve(root, 'vendor/mr-pass-code.js')), 'Worker pass generator is missing');
+assert(existsSync(resolve(root, 'vendor/mr-gate-reader.min.js')), 'Gate reader is missing');
 
 const workflow = read('.github/workflows/qa.yml');
 assert(workflow.includes('contents: read'), 'quality workflow must use read-only repository permissions');

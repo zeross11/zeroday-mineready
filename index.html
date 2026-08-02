@@ -42,9 +42,9 @@
       window.setTimeout(function(){if(!document.querySelector('.app'))fail('Startup timed out.');},8000);
     })();
   </script>
-  <script src="./vendor/qrcode-generator.js?v=2.0.4" onerror="console.warn('QR generator did not load; predefined passes remain available')"></script>
+  <script src="./vendor/mr-pass-code.js?v=2.0.4" onerror="console.warn('Worker pass generator did not load; predefined passes remain available')"></script>
   <script src="./mineready-v111.js?v=11.3.0" onerror="MR_START_FAIL('MineReady application file did not load')"></script>
-  <script src="./vendor/qr-scanner.legacy.min.js?v=1.4.2" onerror="console.warn('QR scanner library did not load; photo and camera decoding will be unavailable')"></script>
+  <script src="./vendor/mr-gate-reader.min.js?v=1.4.2" onerror="console.warn('Gate reader library did not load; photo and camera decoding will be unavailable')"></script>
   <script src="./mineready-v112.js?v=11.3.0" onerror="console.warn('MineReady camera and training enhancements did not load')"></script>
   <script>(function(){function setRelease(){var p=document.querySelector('.demo-pill');if(p&&p.textContent!=='v11.3.0')p.textContent='v11.3.0';}setRelease();new MutationObserver(setRelease).observe(document.getElementById('app'),{childList:true,subtree:true});})();</script>
 </body>
