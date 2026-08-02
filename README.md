@@ -10,6 +10,7 @@ MineReady is a mobile-first, English/Spanish demonstration of contractor readine
 
 ## What the demo shows
 
+- A concise first-visit welcome and optional four-step tour of the real product workflows
 - A 24-worker fictional roster with clear, restricted, expired, pending, action-required, and on-site examples
 - Local fictional worker portraits with no remote image or personal-data dependency
 - Search by worker name, ID, employer, role, crew, work order, or training program
@@ -31,7 +32,7 @@ Use the [five-minute demo guide](DEMO_GUIDE.md) for a repeatable presentation. T
 4. Search for `Mei Chen` at Gate to show a worker who is clear for the assignment.
 5. Switch to **Employer Admin → People → Add one worker** to show direct roster intake.
 
-Use **Reset demo** before a presentation when you want the original fictional state.
+Use **Demo guide** at any time to restart the walkthrough. Use **Reset demo** before a presentation when you want the original fictional state and first-visit welcome.
 
 ## Workspaces
 
@@ -108,7 +109,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for trust boundaries and design details.
 
 ## Release status
 
-Release **11.5.0** passed static release validation and targeted browser testing at 320×800 and 1280×720. The public custom domain was verified with the populated roster, local portraits, People and Gate search, one-worker intake, context-aware remediation, responsive layout, accessibility baseline, and zero runtime console errors. GitHub quality checks and Pages deployment completed successfully.
+Release **11.6.0** adds an optional first-visit welcome and a reopenable guided tour that moves prospects through the real Mine Safety and Employer Admin workflows. It passed static release validation and targeted browser testing at 320×800 and 1280×720, including onboarding, the populated roster, local portraits, search, worker intake, context-aware remediation, responsive layout, accessibility baseline, and runtime console checks.
 
 ## Production adaptation
 

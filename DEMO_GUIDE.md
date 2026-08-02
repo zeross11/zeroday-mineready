@@ -5,12 +5,14 @@ This walkthrough presents the strongest MineReady story in about five minutes. A
 ## Before the meeting
 
 1. Open [https://mineready.zerodaycyber.io](https://mineready.zerodaycyber.io) on the device you will present.
-2. Select **Reset demo** and confirm so the original 24-worker state is restored.
-3. Confirm the release pill shows `v11.5.0`.
+2. Select **Reset demo** and confirm so the original 24-worker state and welcome are restored.
+3. Confirm the release pill shows `v11.6.0`.
 4. Confirm worker portraits appear and the browser console has no errors if developer tools are available.
 5. Grant camera permission only if you intend to demonstrate live QR scanning; roster and photo lookup work without camera access.
 
 ## Five-minute flow
+
+The first visit opens a concise welcome. Select **Start 3-minute tour** for a guided overview that moves through the real screens, or **Explore on my own** to begin the manual flow below. The tour can always be reopened with **Demo guide** in the demonstration banner.
 
 ### 1. Start with the operating picture
 

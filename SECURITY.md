@@ -2,7 +2,7 @@
 
 ## Supported version
 
-Security updates are applied to the current public demonstration release only. The supported release is **11.5.0**.
+Security updates are applied to the current public demonstration release only. The supported release is **11.6.0**.
 
 ## Safe-use boundary
 

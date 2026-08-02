@@ -8,7 +8,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 
-const version = '11.5.0';
+const version = '11.6.0';
 const html = read('index.html');
 const core = read('mineready-v111.js');
 const enhancements = read('mineready-v112.js');
@@ -31,6 +31,11 @@ assert(core.includes("seedWorker('ZMR-1120'"), 'populated 24-worker demonstratio
 assert(core.includes("data-action=\"worker-add-open\""), 'single-worker intake action is missing');
 assert(core.includes('function filterPeople'), 'roster search implementation is missing');
 assert(core.includes('function filterGateRoster'), 'gate roster search implementation is missing');
+assert(core.includes('function showWelcome'), 'first-visit welcome is missing');
+assert(core.includes('function showTourStep'), 'guided product tour is missing');
+assert(core.includes('data-action="tour-open"'), 'reopenable demo guide action is missing');
+assert(core.includes("p.get('tour')==='1'"), 'forced tour URL support is missing');
+assert(core.includes('!deepLinkRequested&&!welcomeSeen()'), 'worker deep links must bypass automatic onboarding');
 assert(readdirSync(resolve(root, 'assets/workers')).filter((name) => name.endsWith('.webp')).length === 24, '24 local worker portraits are required');
 assert(!html.includes('serviceWorker.register'), 'application shell service worker must remain disabled');
 assert(!existsSync(resolve(root, 'service-worker.js')), 'retired service worker source must not be published');

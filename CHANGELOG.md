@@ -2,6 +2,14 @@
 
 All notable public demonstration changes are summarized here.
 
+## 11.6.0 — 2026-08-02
+
+- Added a concise welcome for first-time visitors without putting a marketing splash in front of returning users.
+- Added an optional four-step tour that moves through the real Mine Safety and Employer Admin screens.
+- Added a permanent Demo guide control so the walkthrough can be restarted during a prospect conversation.
+- Added English and Spanish onboarding copy, keyboard-accessible controls, responsive layouts, and a `?tour=1` presentation link.
+- Reset now restores both the fictional data and the first-visit welcome.
+
 ## 11.5.0 — 2026-08-02
 
 - Expanded the fictional population to 24 workers with varied readiness and on-site states.
