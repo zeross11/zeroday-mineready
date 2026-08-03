@@ -2,7 +2,7 @@
 
 ## Supported version
 
-Security updates are applied to the current public demonstration release only. The supported release is **11.6.0**.
+Security updates are applied to the current public demonstration release only. The supported release is **11.7.0**.
 
 ## Safe-use boundary
 
@@ -12,6 +12,8 @@ MineReady is a static, fictional demonstration. Do not enter real worker, creden
 - Workspace roles and approvals are client-side demonstration controls, not security boundaries.
 - QR passes identify fictional roster entries; they are not credentials or proof of authorization.
 - Training completions, credited minutes, approvals, restrictions, and gate decisions are illustrative only.
+
+The public demo uses a no-inline-script content-security policy, blocks framed execution, validates and bounds browser-local state, limits uploaded QR images, pins CI actions to immutable commits, and verifies vendored dependency hashes. GitHub Pages does not provide application authentication or custom production security headers; these controls reduce demo risk but do not create a production trust boundary.
 
 ## Reporting a vulnerability
 

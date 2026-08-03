@@ -2,6 +2,16 @@
 
 All notable public demonstration changes are summarized here.
 
+## 11.7.0 — 2026-08-02
+
+- Removed inline executable scripts and tightened the content-security policy.
+- Added a framed-execution guard to reduce UI-redressing and clickjacking exposure on static hosting.
+- Added strict size, shape, uniqueness, and relationship validation for browser-local demo state with safe recovery.
+- Bounded workers, assignments, records, CSV growth, and uploaded QR photo size/dimensions to resist local resource exhaustion.
+- Normalized imported worker IDs and strengthened assignment input allowlists.
+- Pinned GitHub Actions to immutable commits, disabled persisted checkout credentials, and verified vendored dependency hashes during every release check.
+- Improved QR scanner focus containment and restoration.
+
 ## 11.6.0 — 2026-08-02
 
 - Added a concise welcome for first-time visitors without putting a marketing splash in front of returning users.

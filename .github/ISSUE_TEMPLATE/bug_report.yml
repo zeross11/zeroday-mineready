@@ -12,7 +12,7 @@ body:
     attributes:
       label: MineReady release
       description: The version shown in the application release pill.
-      placeholder: 11.5.0
+      placeholder: 11.7.0
     validations:
       required: true
   - type: input

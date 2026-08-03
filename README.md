@@ -21,6 +21,7 @@ MineReady is a mobile-first, English/Spanish demonstration of contractor readine
 - Part 46-oriented program, task-training, annual-refresher, review, and credited-time demonstrations
 - QR pass generation, camera/photo scanning where supported, and manual roster lookup
 - Assignment-specific mine approval, holds, check-in, and check-out
+- Hardened static delivery with no inline executable scripts, guarded framing, validated browser state, constrained uploads, and pinned dependency integrity
 
 ## Recommended prospect walkthrough
 
@@ -58,6 +59,7 @@ Run the release checks with Node.js 22 or newer:
 
 ```powershell
 node scripts/validate-release.mjs
+node --check mineready-boot.js
 node --check mineready-v111.js
 node --check mineready-v112.js
 node --check vendor/mr-pass-code.js
@@ -77,7 +79,7 @@ node --check vendor/mr-pass-code.js
 - No build pipeline, package manager, backend, service worker, or production identity provider
 - Locally vendored QR generation and decoding libraries with license notices
 - Cache-busted release assets and a restrictive browser content-security policy
-- Read-only GitHub Actions validation on `main`
+- Read-only GitHub Actions validation on `main`, with immutable action pins and non-persisted checkout credentials
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for trust boundaries and design details.
 
@@ -86,6 +88,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for trust boundaries and design details.
 | Path | Purpose |
 | --- | --- |
 | `index.html` | Application shell, security policy, and release asset loading |
+| `mineready-boot.js` | Startup recovery, frame guard, cache retirement, and release indicator |
 | `mineready-v111.js` | Core fictional data and MineReady workflows |
 | `mineready-v112.js` | Training, QR scanning, and camera enhancements |
 | `mineready-v111.css`, `mineready-v112.css` | Responsive application styling |
@@ -109,7 +112,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for trust boundaries and design details.
 
 ## Release status
 
-Release **11.6.0** adds an optional first-visit welcome and a reopenable guided tour that moves prospects through the real Mine Safety and Employer Admin workflows. It passed static release validation and targeted browser testing at 320×800 and 1280×720, including onboarding, the populated roster, local portraits, search, worker intake, context-aware remediation, responsive layout, accessibility baseline, and runtime console checks.
+Release **11.7.0** is the hardened prospect-demo release. It removes inline executable scripts, rejects framed execution, validates and bounds browser-local data, constrains QR photo uploads, normalizes roster intake, pins CI actions, and verifies vendored dependency hashes. It retains the optional first-visit welcome, four-step tour, populated roster, local portraits, search, worker intake, and context-aware remediation.
 
 ## Production adaptation
 

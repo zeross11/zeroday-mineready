@@ -19,6 +19,7 @@ GitHub Pages
 
 | Component | Responsibility |
 | --- | --- |
+| `mineready-boot.js` | Startup failure handling, framed-execution guard, cache retirement, and release indicator |
 | `index.html` | Application shell, content-security policy, failure handling, release asset ordering |
 | `mineready-v111.js` | Fictional roster, readiness logic, assignments, reviews, approvals, holds, and gate state |
 | `mineready-v112.js` | Training enhancements, QR scanning, photo decoding, and camera controls |
@@ -53,10 +54,10 @@ QR libraries are stored in the repository to avoid runtime CDN dependency. Their
 
 ## Security posture
 
-The demo reduces public attack surface by using no backend, no credentials, no cross-origin runtime dependency, a restrictive content-security policy, spreadsheet-safe CSV handling, explicit camera activation, and read-only GitHub Actions permissions.
+The demo reduces public attack surface by using no backend, no credentials, no cross-origin runtime dependency, a no-inline-script content-security policy, a framed-execution guard, validated and bounded browser state, spreadsheet-safe CSV handling, constrained QR photo uploads, explicit camera activation, immutable CI action pins, vendored dependency hashes, and read-only GitHub Actions permissions.
 
 These choices do not make it a production security system. A real deployment requires the controls listed in [SECURITY.md](SECURITY.md), including authenticated identities, server-enforced least privilege, protected records, durable audit history, monitoring, incident response, and backup/recovery.
 
 ## Release integrity
 
-`scripts/validate-release.mjs` checks aligned release versions, required assets, local-only runtime dependencies, license notices, documentation, public-repository hygiene, branch-safe workflow permissions, and retired artifact removal. GitHub Actions runs the validator and JavaScript syntax checks for pushes to `main` and pull requests.
+`scripts/validate-release.mjs` checks aligned release versions, required assets, local-only runtime dependencies, dependency hashes, immutable workflow pins, CSP restrictions, license notices, documentation, public-repository hygiene, branch-safe workflow permissions, and retired artifact removal. GitHub Actions runs the validator and JavaScript syntax checks for pushes to `main` and pull requests.
