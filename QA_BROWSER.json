@@ -1,7 +1,7 @@
 {
-  "release": "11.6.0",
+  "release": "11.7.0",
   "status": "success",
-  "checked_at": "2026-08-02T23:19:10Z",
+  "checked_at": "2026-08-03T01:07:27Z",
   "browser": "Codex in-app browser",
   "results": [
     {"test":"layout_320","viewport":{"width":320,"height":800},"horizontal_overflow":false,"passed":true},
@@ -17,9 +17,14 @@
     {"test":"gate_search","query":"Mei Chen","selected_worker":"ZMR-1112","passed":true},
     {"test":"single_worker_intake","worker":"ZMR-1121","name":"Jordan Ellis","new_roster_total":25,"searchable":true,"passed":true},
     {"test":"carlos_orientation_remediation","worker_preselected":"ZMR-1042","template":"site-hazard-awareness","review_owner":"mine","bilingual_fields":true,"passed":true},
+    {"test":"strict_script_csp","inline_scripts":0,"inline_event_handlers":0,"unsafe_inline_script":false,"passed":true},
+    {"test":"hostile_roster_rendering","payloads":["html","svg","script","spreadsheet_formula"],"executed":false,"rendered_as_text":true,"passed":true},
+    {"test":"stored_state_integrity","valid_state_persisted":true,"tampered_state_recovered":true,"integrity_marker":"valid","passed":true},
+    {"test":"bounded_csv_import","lowercase_id_normalized":true,"duplicate_skipped":true,"roster_limit":500,"passed":true},
+    {"test":"upload_limits","qr_photo_bytes":8388608,"qr_photo_pixels":25000000,"csv_bytes":1048576,"passed":true},
     {"test":"accessibility_basics","duplicate_ids":0,"unnamed_buttons":0,"unlabelled_controls":0,"images_missing_alt":0,"passed":true},
     {"test":"runtime_console","errors":0,"external_runtime_dependencies":0,"passed":true},
-    {"test":"production_live","url":"https://mineready.zerodaycyber.io","version":"11.6.0","welcome":true,"guided_steps":4,"github_quality":"success","github_pages":"success","passed":true}
+    {"test":"production_live","url":"https://mineready.zerodaycyber.io","version":"11.7.0","state_integrity":"valid","welcome":true,"guided_steps":4,"roster_search":true,"carlos_remediation":true,"console_errors":0,"github_quality":"success","github_pages":"success","commit":"cb943dc15bd3da679b7ff5ff38f9c7eb2a61ae4f","passed":true}
   ],
   "failures": []
 }

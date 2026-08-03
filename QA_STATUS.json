@@ -1,5 +1,5 @@
 {
-  "release": "11.6.0",
+  "release": "11.7.0",
   "status": "success",
   "static": "success",
   "browser": "success",
@@ -14,9 +14,15 @@
   "gate_search": "success",
   "single_worker_intake": "success",
   "context_aware_readiness": "success",
+  "strict_script_csp": "success",
+  "stored_state_validation": "success",
+  "hostile_input_rendering": "success",
+  "bounded_imports_and_uploads": "success",
+  "pinned_ci_and_vendor_integrity": "success",
   "security_review": "success",
-  "checked_at": "2026-08-02T23:19:10Z",
+  "checked_at": "2026-08-03T01:07:27Z",
   "deployment_tested": true,
   "live_url": "https://mineready.zerodaycyber.io",
-  "live_version": "11.6.0"
+  "live_version": "11.7.0",
+  "live_commit": "cb943dc15bd3da679b7ff5ff38f9c7eb2a61ae4f"
 }
